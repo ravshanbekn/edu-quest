@@ -83,12 +83,12 @@ public class CourseService {
 
     // ── helpers ──
 
-    Course findCourseOrThrow(UUID courseId) {
+    public Course findCourseOrThrow(UUID courseId) {
         return courseRepository.findById(courseId)
                 .orElseThrow(() -> new IllegalArgumentException("Course not found: " + courseId));
     }
 
-    void checkOwnerOrAdmin(Course course, UUID userId, boolean isAdmin) {
+    public void checkOwnerOrAdmin(Course course, UUID userId, boolean isAdmin) {
         if (!isAdmin && !course.getTeacher().getId().equals(userId)) {
             throw new org.springframework.security.access.AccessDeniedException("Not the course owner");
         }

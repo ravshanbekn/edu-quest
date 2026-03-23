@@ -53,7 +53,7 @@ public class QuizService {
         return QuizResponse.from(findQuizOrThrow(quizId));
     }
 
-    Quiz findQuizOrThrow(UUID quizId) {
+    public Quiz findQuizOrThrow(UUID quizId) {
         return quizRepository.findById(quizId)
                 .orElseThrow(() -> new IllegalArgumentException("Quiz not found: " + quizId));
     }

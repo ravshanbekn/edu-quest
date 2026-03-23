@@ -29,6 +29,14 @@ server:
       max-file-size: 5MB
       max-request-size: 5MB
 
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: method
+  api-docs:
+    path: /v3/api-docs
+
 app:
   jwt:
     secret: ${JWT_SECRET:eduquest-dev-secret-key-min-256-bits-long-enough-here}
