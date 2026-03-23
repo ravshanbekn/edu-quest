@@ -1,5 +1,6 @@
 package kz.eduquest.user.service;
 
+import kz.eduquest.storage.StorageService;
 import kz.eduquest.user.dto.ProfileResponse;
 import kz.eduquest.user.dto.UpdateProfileRequest;
 import kz.eduquest.user.dto.UserResponse;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Set;
 import java.util.UUID;
@@ -24,9 +26,12 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class UserService {
 
+    private static final Set<String> ALLOWED_IMAGE_TYPES = Set.of("image/jpeg", "image/png", "image/webp");
+
     private final UserRepository userRepository;
     private final UserProfileRepository profileRepository;
     private final RoleRepository roleRepository;
+    private final StorageService storageService;
 
     public UserResponse getUser(UUID userId) {
         return toUserResponse(findUserOrThrow(userId));
@@ -69,6 +74,33 @@ public class UserService {
 
     public Page<UserResponse> getAllUsers(Pageable pageable) {
         return userRepository.findAllActive(pageable).map(this::toUserResponse);
+    }
+
+    @Transactional
+    public ProfileResponse uploadAvatar(UUID userId, MultipartFile file) {
+        if (file.isEmpty()) {
+            throw new IllegalArgumentException("File is empty");
+        }
+        if (!ALLOWED_IMAGE_TYPES.contains(file.getContentType())) {
+            throw new IllegalArgumentException("Only JPEG, PNG and WebP images are allowed");
+        }
+
+        UserProfile profile = profileRepository.findByUserId(userId)
+                .orElseGet(() -> {
+                    User user = findUserOrThrow(userId);
+                    return profileRepository.save(UserProfile.builder().user(user).build());
+                });
+
+        // Удалить старый аватар если есть
+        if (profile.getAvatarUrl() != null) {
+            storageService.delete(profile.getAvatarUrl());
+        }
+
+        String objectKey = storageService.upload("avatars", file);
+        profile.setAvatarUrl(objectKey);
+        profileRepository.save(profile);
+
+        return ProfileResponse.full(profile);
     }
 
     @Transactional
