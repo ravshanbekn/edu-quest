@@ -23,3 +23,9 @@ spring:
 
 server:
   port: 8090
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:eduquest-dev-secret-key-min-256-bits-long-enough-here}
+    access-expiration-ms: 900000       # 15 минут
+    refresh-expiration-ms: 604800000   # 7 дней

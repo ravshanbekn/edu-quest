@@ -1,6 +1,7 @@
 package kz.eduquest.user.controller;
 
 import jakarta.validation.Valid;
+import kz.eduquest.common.security.UserPrincipal;
 import kz.eduquest.user.dto.ProfileResponse;
 import kz.eduquest.user.dto.UpdateProfileRequest;
 import kz.eduquest.user.dto.UserResponse;
@@ -9,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
@@ -16,9 +19,6 @@ import java.util.UUID;
 
 /**
  * REST API: Users & Profiles (архитектурный документ §7.2).
- *
- * TODO Sprint 1: заменить параметр userId на Spring Security Principal
- *               и добавить @PreAuthorize по ролям/правам.
  */
 @RestController
 @RequiredArgsConstructor
@@ -29,35 +29,37 @@ public class UserController {
 
     /** GET /api/v1/users/me — текущий пользователь */
     @GetMapping("/me")
-    public ResponseEntity<UserResponse> getMe(@RequestParam UUID userId) {
-        return ResponseEntity.ok(userService.getUser(userId));
+    public ResponseEntity<UserResponse> getMe(@AuthenticationPrincipal UserPrincipal principal) {
+        return ResponseEntity.ok(userService.getUser(principal.getId()));
     }
 
     /** PUT /api/v1/users/me/profile — обновить профиль */
     @PutMapping("/me/profile")
     public ResponseEntity<ProfileResponse> updateMyProfile(
-            @RequestParam UUID userId,
+            @AuthenticationPrincipal UserPrincipal principal,
             @Valid @RequestBody UpdateProfileRequest request) {
-        return ResponseEntity.ok(userService.updateProfile(userId, request));
+        return ResponseEntity.ok(userService.updateProfile(principal.getId(), request));
     }
 
     /** GET /api/v1/users/{id}/profile — профиль пользователя */
     @GetMapping("/{id}/profile")
     public ResponseEntity<ProfileResponse> getUserProfile(
             @PathVariable UUID id,
-            @RequestParam(required = false) UUID requestingUserId,
-            @RequestParam(defaultValue = "false") boolean admin) {
-        return ResponseEntity.ok(userService.getProfile(id, requestingUserId, admin));
+            @AuthenticationPrincipal UserPrincipal principal) {
+        boolean isAdmin = principal.hasRole("ADMIN");
+        return ResponseEntity.ok(userService.getProfile(id, principal.getId(), isAdmin));
     }
 
     /** GET /api/v1/users — список пользователей (ADMIN only) */
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<UserResponse>> getAllUsers(Pageable pageable) {
         return ResponseEntity.ok(userService.getAllUsers(pageable));
     }
 
     /** PUT /api/v1/users/{id}/roles — назначить роли (ADMIN only) */
     @PutMapping("/{id}/roles")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponse> assignRoles(
             @PathVariable UUID id,
             @RequestBody Set<String> roleNames) {
