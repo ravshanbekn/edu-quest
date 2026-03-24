@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +40,7 @@ public class ProgressService {
 
     /** Отметить урок как завершённый */
     @Transactional
-    public UserProgress completeLesson(UUID userId, UUID lessonId) {
+    public UserProgress completeLesson(Long userId, Long lessonId) {
         Lesson lesson = lessonRepository.findById(lessonId)
                 .orElseThrow(() -> new IllegalArgumentException("Lesson not found: " + lessonId));
 
@@ -66,7 +65,7 @@ public class ProgressService {
 
     /** Отправить решение задачи */
     @Transactional
-    public TaskSubmission submitTask(UUID userId, UUID taskId, String answer) {
+    public TaskSubmission submitTask(Long userId, Long taskId, String answer) {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new IllegalArgumentException("Task not found: " + taskId));
 
@@ -93,7 +92,7 @@ public class ProgressService {
 
     /** Отправить ответы на квиз */
     @Transactional
-    public QuizAttempt submitQuiz(UUID userId, UUID quizId, Object answers, int score, int maxScore) {
+    public QuizAttempt submitQuiz(Long userId, Long quizId, Object answers, int score, int maxScore) {
         quizRepository.findById(quizId)
                 .orElseThrow(() -> new IllegalArgumentException("Quiz not found: " + quizId));
 
@@ -114,28 +113,29 @@ public class ProgressService {
         return attempt;
     }
 
-    /** Открыть подсказку (штраф XP) */
+    /** Открыть подсказку по порядковому номеру (штраф XP) */
     @Transactional
-    public Hint revealHint(UUID userId, UUID hintId) {
-        Hint hint = hintRepository.findById(hintId)
-                .orElseThrow(() -> new IllegalArgumentException("Hint not found: " + hintId));
+    public Hint revealHint(Long userId, Long taskId, int hintOrder) {
+        Hint hint = hintRepository.findByTaskIdAndSortOrder(taskId, hintOrder)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Hint not found: task=" + taskId + ", order=" + hintOrder));
 
         // Обновить счётчик подсказок в прогрессе урока
-        UUID lessonId = hint.getTask().getLesson().getId();
+        Long lessonId = hint.getTask().getLesson().getId();
         progressRepository.findByUserIdAndLessonId(userId, lessonId)
                 .ifPresent(p -> {
                     p.setHintsUsed(p.getHintsUsed() + 1);
                     progressRepository.save(p);
                 });
 
-        eventPublisher.publishEvent(new HintUsedEvent(userId, hintId, hint.getTask().getId()));
+        eventPublisher.publishEvent(new HintUsedEvent(userId, hint.getId(), hint.getTask().getId()));
 
         return hint;
     }
 
     /** Проверить завершение всех уроков в блоке */
-    private void checkBlockCompletion(UUID userId, Lesson completedLesson) {
-        UUID blockId = completedLesson.getBlock().getId();
+    private void checkBlockCompletion(Long userId, Lesson completedLesson) {
+        Long blockId = completedLesson.getBlock().getId();
         List<Lesson> allLessons = lessonRepository.findByBlockIdOrderBySortOrder(blockId);
 
         boolean allCompleted = allLessons.stream().allMatch(lesson ->

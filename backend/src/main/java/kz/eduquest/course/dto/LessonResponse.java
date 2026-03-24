@@ -3,11 +3,9 @@ package kz.eduquest.course.dto;
 import kz.eduquest.course.entity.Lesson;
 import kz.eduquest.course.entity.LessonType;
 
-import java.util.UUID;
-
 public record LessonResponse(
-        UUID id,
-        UUID blockId,
+        Long id,
+        Long blockId,
         String title,
         LessonType type,
         int sortOrder,

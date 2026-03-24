@@ -4,9 +4,8 @@ import kz.eduquest.course.entity.LessonContent;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.UUID;
 
-public interface LessonContentRepository extends JpaRepository<LessonContent, UUID> {
+public interface LessonContentRepository extends JpaRepository<LessonContent, Long> {
 
-    List<LessonContent> findByLessonIdOrderBySortOrder(UUID lessonId);
+    List<LessonContent> findByLessonIdOrderBySortOrder(Long lessonId);
 }

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +19,7 @@ public class BlockService {
     private final CourseService courseService;
 
     @Transactional
-    public BlockResponse create(UUID userId, boolean isAdmin, UUID courseId, CreateBlockRequest request) {
+    public BlockResponse create(Long userId, boolean isAdmin, Long courseId, CreateBlockRequest request) {
         Course course = courseService.findCourseOrThrow(courseId);
         courseService.checkOwnerOrAdmin(course, userId, isAdmin);
 
@@ -35,7 +34,7 @@ public class BlockService {
     }
 
     @Transactional
-    public BlockResponse update(UUID userId, boolean isAdmin, UUID blockId, UpdateBlockRequest request) {
+    public BlockResponse update(Long userId, boolean isAdmin, Long blockId, UpdateBlockRequest request) {
         Block block = findBlockOrThrow(blockId);
         courseService.checkOwnerOrAdmin(block.getCourse(), userId, isAdmin);
 
@@ -45,18 +44,18 @@ public class BlockService {
     }
 
     @Transactional
-    public void delete(UUID userId, boolean isAdmin, UUID blockId) {
+    public void delete(Long userId, boolean isAdmin, Long blockId) {
         Block block = findBlockOrThrow(blockId);
         courseService.checkOwnerOrAdmin(block.getCourse(), userId, isAdmin);
         blockRepository.delete(block);
     }
 
     @Transactional
-    public List<BlockResponse> reorder(UUID userId, boolean isAdmin, UUID courseId, ReorderRequest request) {
+    public List<BlockResponse> reorder(Long userId, boolean isAdmin, Long courseId, ReorderRequest request) {
         Course course = courseService.findCourseOrThrow(courseId);
         courseService.checkOwnerOrAdmin(course, userId, isAdmin);
 
-        List<UUID> orderedIds = request.orderedIds();
+        List<Long> orderedIds = request.orderedIds();
         for (int i = 0; i < orderedIds.size(); i++) {
             Block block = findBlockOrThrow(orderedIds.get(i));
             block.setSortOrder(i);
@@ -67,7 +66,7 @@ public class BlockService {
                 .stream().map(BlockResponse::from).toList();
     }
 
-    Block findBlockOrThrow(UUID blockId) {
+    Block findBlockOrThrow(Long blockId) {
         return blockRepository.findById(blockId)
                 .orElseThrow(() -> new IllegalArgumentException("Block not found: " + blockId));
     }

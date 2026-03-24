@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,7 +30,7 @@ public class QuizController {
     @PreAuthorize("hasAnyRole('TEACHER','ADMIN')")
     public ResponseEntity<QuizResponse> create(
             @AuthenticationPrincipal UserPrincipal p,
-            @PathVariable UUID lessonId,
+            @PathVariable Long lessonId,
             @Valid @RequestBody CreateQuizRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(quizService.create(p.getId(), p.hasRole("ADMIN"), lessonId, request));
@@ -39,7 +38,7 @@ public class QuizController {
 
     @PostMapping("/api/v1/quizzes/{id}/attempt")
     @PreAuthorize("hasRole('STUDENT')")
-    public ResponseEntity<QuizResponse> startAttempt(@PathVariable UUID id) {
+    public ResponseEntity<QuizResponse> startAttempt(@PathVariable Long id) {
         // Возвращает квиз (вопросы без правильных ответов)
         return ResponseEntity.ok(quizService.getQuiz(id));
     }
@@ -48,8 +47,8 @@ public class QuizController {
     @PreAuthorize("hasRole('STUDENT')")
     public ResponseEntity<QuizAttempt> submitAttempt(
             @AuthenticationPrincipal UserPrincipal p,
-            @PathVariable UUID id,
-            @PathVariable UUID attemptId,
+            @PathVariable Long id,
+            @PathVariable Long attemptId,
             @Valid @RequestBody SubmitQuizRequest request) {
 
         // Подсчёт баллов

@@ -3,11 +3,9 @@ package kz.eduquest.course.dto;
 import kz.eduquest.course.entity.Task;
 import kz.eduquest.course.entity.TaskType;
 
-import java.util.UUID;
-
 public record TaskResponse(
-        UUID id,
-        UUID lessonId,
+        Long id,
+        Long lessonId,
         String description,
         TaskType taskType,
         int xpReward,

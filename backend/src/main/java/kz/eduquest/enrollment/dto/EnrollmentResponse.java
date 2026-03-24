@@ -4,12 +4,11 @@ import kz.eduquest.enrollment.entity.Enrollment;
 import kz.eduquest.enrollment.entity.EnrollmentStatus;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 public record EnrollmentResponse(
-        UUID id,
-        UUID userId,
-        UUID courseId,
+        Long id,
+        Long userId,
+        Long courseId,
         String courseTitle,
         EnrollmentStatus status,
         LocalDateTime enrolledAt

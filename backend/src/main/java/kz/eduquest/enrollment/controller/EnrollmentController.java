@@ -12,8 +12,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
-
 @RestController
 @RequiredArgsConstructor
 public class EnrollmentController {
@@ -25,7 +23,7 @@ public class EnrollmentController {
     @PreAuthorize("hasRole('STUDENT')")
     public ResponseEntity<EnrollmentResponse> selfEnroll(
             @AuthenticationPrincipal UserPrincipal p,
-            @PathVariable UUID id) {
+            @PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(enrollmentService.selfEnroll(p.getId(), id));
     }
@@ -35,8 +33,8 @@ public class EnrollmentController {
     @PreAuthorize("hasAnyRole('TEACHER','ADMIN')")
     public ResponseEntity<EnrollmentResponse> enrollByTeacher(
             @AuthenticationPrincipal UserPrincipal p,
-            @PathVariable UUID id,
-            @PathVariable UUID userId) {
+            @PathVariable Long id,
+            @PathVariable Long userId) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(enrollmentService.enrollByTeacher(p.getId(), p.hasRole("ADMIN"), id, userId));
     }
@@ -46,8 +44,8 @@ public class EnrollmentController {
     @PreAuthorize("hasAnyRole('TEACHER','ADMIN')")
     public ResponseEntity<Void> unenroll(
             @AuthenticationPrincipal UserPrincipal p,
-            @PathVariable UUID id,
-            @PathVariable UUID userId) {
+            @PathVariable Long id,
+            @PathVariable Long userId) {
         enrollmentService.unenroll(p.getId(), p.hasRole("ADMIN"), id, userId);
         return ResponseEntity.noContent().build();
     }

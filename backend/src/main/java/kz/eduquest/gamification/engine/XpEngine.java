@@ -12,7 +12,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
 
 /**
  * XP Engine — слушает события прогресса и начисляет XP (§6.1, §6.4).
@@ -76,7 +75,7 @@ public class XpEngine {
     /**
      * Начисляет XP только один раз за (userId, actionType, referenceId).
      */
-    private void awardXpOnce(UUID userId, ActionType actionType, UUID referenceId, int xpAmount) {
+    private void awardXpOnce(Long userId, ActionType actionType, Long referenceId, int xpAmount) {
         if (xpLogRepository.existsByUserIdAndActionTypeAndReferenceId(userId, actionType, referenceId)) {
             log.debug("XP already awarded: userId={}, action={}, ref={}", userId, actionType, referenceId);
             return;
@@ -84,7 +83,7 @@ public class XpEngine {
         awardXp(userId, actionType, referenceId, xpAmount);
     }
 
-    private void awardXp(UUID userId, ActionType actionType, UUID referenceId, int xpAmount) {
+    private void awardXp(Long userId, ActionType actionType, Long referenceId, int xpAmount) {
         var user = userRepository.getReferenceById(userId);
 
         xpLogRepository.save(

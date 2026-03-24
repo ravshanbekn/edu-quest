@@ -2,11 +2,9 @@ package kz.eduquest.course.dto;
 
 import kz.eduquest.course.entity.Block;
 
-import java.util.UUID;
-
 public record BlockResponse(
-        UUID id,
-        UUID courseId,
+        Long id,
+        Long courseId,
         String title,
         int sortOrder
 ) {

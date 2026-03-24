@@ -8,13 +8,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Getter
 public class UserPrincipal implements UserDetails {
 
-    private final UUID id;
+    private final Long id;
     private final String email;
     private final String password;
     private final boolean active;

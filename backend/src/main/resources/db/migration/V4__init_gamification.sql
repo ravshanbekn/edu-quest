@@ -4,18 +4,18 @@
 
 -- user_xp_log
 CREATE TABLE user_xp_log (
-    id           UUID         PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id      UUID         NOT NULL REFERENCES users (id),
+    id           BIGSERIAL    PRIMARY KEY,
+    user_id      BIGINT       NOT NULL REFERENCES users (id),
     action_type  VARCHAR(100) NOT NULL,
     xp_amount    INT          NOT NULL,
-    reference_id UUID,
+    reference_id BIGINT,
     created_at   TIMESTAMP    NOT NULL DEFAULT now()
 );
 
 -- user_levels
 CREATE TABLE user_levels (
-    id            UUID      PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id       UUID      NOT NULL UNIQUE REFERENCES users (id),
+    id            BIGSERIAL PRIMARY KEY,
+    user_id       BIGINT    NOT NULL UNIQUE REFERENCES users (id),
     current_level INT       NOT NULL DEFAULT 1,
     total_xp      INT       NOT NULL DEFAULT 0,
     updated_at    TIMESTAMP NOT NULL DEFAULT now()
@@ -23,7 +23,7 @@ CREATE TABLE user_levels (
 
 -- badge_definitions
 CREATE TABLE badge_definitions (
-    id              UUID         PRIMARY KEY DEFAULT gen_random_uuid(),
+    id              BIGSERIAL    PRIMARY KEY,
     name            VARCHAR(100) NOT NULL UNIQUE,
     description     TEXT,
     icon_url        VARCHAR(500),
@@ -34,9 +34,9 @@ CREATE TABLE badge_definitions (
 
 -- user_badges
 CREATE TABLE user_badges (
-    id         UUID      PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id    UUID      NOT NULL REFERENCES users (id),
-    badge_id   UUID      NOT NULL REFERENCES badge_definitions (id),
+    id         BIGSERIAL PRIMARY KEY,
+    user_id    BIGINT    NOT NULL REFERENCES users (id),
+    badge_id   BIGINT    NOT NULL REFERENCES badge_definitions (id),
     awarded_at TIMESTAMP NOT NULL DEFAULT now(),
     UNIQUE (user_id, badge_id)
 );

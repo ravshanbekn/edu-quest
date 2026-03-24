@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,7 +32,7 @@ public class UserService {
     private final RoleRepository roleRepository;
     private final StorageService storageService;
 
-    public UserResponse getUser(UUID userId) {
+    public UserResponse getUser(Long userId) {
         return toUserResponse(findUserOrThrow(userId));
     }
 
@@ -44,7 +43,7 @@ public class UserService {
      * @param requestingUserId ID того, кто делает запрос (null — гость)
      * @param isAdmin          признак роли ADMIN у запрашивающего
      */
-    public ProfileResponse getProfile(UUID targetUserId, UUID requestingUserId, boolean isAdmin) {
+    public ProfileResponse getProfile(Long targetUserId, Long requestingUserId, boolean isAdmin) {
         UserProfile profile = profileRepository.findByUserId(targetUserId)
                 .orElseThrow(() -> new IllegalArgumentException("Profile not found for user: " + targetUserId));
 
@@ -58,7 +57,7 @@ public class UserService {
     }
 
     @Transactional
-    public ProfileResponse updateProfile(UUID userId, UpdateProfileRequest request) {
+    public ProfileResponse updateProfile(Long userId, UpdateProfileRequest request) {
         UserProfile profile = profileRepository.findByUserId(userId)
                 .orElseGet(() -> {
                     User user = findUserOrThrow(userId);
@@ -77,7 +76,7 @@ public class UserService {
     }
 
     @Transactional
-    public ProfileResponse uploadAvatar(UUID userId, MultipartFile file) {
+    public ProfileResponse uploadAvatar(Long userId, MultipartFile file) {
         if (file.isEmpty()) {
             throw new IllegalArgumentException("File is empty");
         }
@@ -104,14 +103,14 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponse assignRoles(UUID userId, Set<String> roleNames) {
+    public UserResponse assignRoles(Long userId, Set<String> roleNames) {
         User user = findUserOrThrow(userId);
         Set<Role> roles = roleRepository.findByNameIn(roleNames);
         user.setRoles(roles);
         return toUserResponse(userRepository.save(user));
     }
 
-    private User findUserOrThrow(UUID userId) {
+    private User findUserOrThrow(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found: " + userId));
     }

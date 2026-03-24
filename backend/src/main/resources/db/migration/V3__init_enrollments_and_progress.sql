@@ -4,20 +4,20 @@
 
 -- enrollments
 CREATE TABLE enrollments (
-    id          UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id     UUID        NOT NULL REFERENCES users (id),
-    course_id   UUID        NOT NULL REFERENCES courses (id),
+    id          BIGSERIAL   PRIMARY KEY,
+    user_id     BIGINT      NOT NULL REFERENCES users (id),
+    course_id   BIGINT      NOT NULL REFERENCES courses (id),
     status      VARCHAR(50) NOT NULL DEFAULT 'ACTIVE',
     enrolled_at TIMESTAMP   NOT NULL DEFAULT now(),
-    enrolled_by UUID        REFERENCES users (id),
+    enrolled_by BIGINT      REFERENCES users (id),
     UNIQUE (user_id, course_id)
 );
 
 -- user_progress
 CREATE TABLE user_progress (
-    id           UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id      UUID        NOT NULL REFERENCES users (id),
-    lesson_id    UUID        NOT NULL REFERENCES lessons (id),
+    id           BIGSERIAL   PRIMARY KEY,
+    user_id      BIGINT      NOT NULL REFERENCES users (id),
+    lesson_id    BIGINT      NOT NULL REFERENCES lessons (id),
     status       VARCHAR(50) NOT NULL DEFAULT 'IN_PROGRESS',
     score        INT         NOT NULL DEFAULT 0,
     hints_used   INT         NOT NULL DEFAULT 0,
@@ -27,9 +27,9 @@ CREATE TABLE user_progress (
 
 -- task_submissions
 CREATE TABLE task_submissions (
-    id           UUID      PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id      UUID      NOT NULL REFERENCES users (id),
-    task_id      UUID      NOT NULL REFERENCES tasks (id),
+    id           BIGSERIAL PRIMARY KEY,
+    user_id      BIGINT    NOT NULL REFERENCES users (id),
+    task_id      BIGINT    NOT NULL REFERENCES tasks (id),
     answer       TEXT      NOT NULL,
     is_correct   BOOLEAN,
     xp_earned    INT       NOT NULL DEFAULT 0,
@@ -38,9 +38,9 @@ CREATE TABLE task_submissions (
 
 -- quiz_attempts
 CREATE TABLE quiz_attempts (
-    id          UUID      PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id     UUID      NOT NULL REFERENCES users (id),
-    quiz_id     UUID      NOT NULL REFERENCES quizzes (id),
+    id          BIGSERIAL PRIMARY KEY,
+    user_id     BIGINT    NOT NULL REFERENCES users (id),
+    quiz_id     BIGINT    NOT NULL REFERENCES quizzes (id),
     answers     JSONB     NOT NULL,
     score       INT       NOT NULL,
     max_score   INT       NOT NULL,

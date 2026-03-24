@@ -5,13 +5,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.UUID;
+public interface CourseRepository extends JpaRepository<Course, Long> {
 
-public interface CourseRepository extends JpaRepository<Course, UUID> {
+    Page<Course> findAll(Pageable pageable);
 
-    Page<Course> findByPublishedTrue(Pageable pageable);
+    Page<Course> findByTeacherId(Long teacherId, Pageable pageable);
 
-    Page<Course> findByTeacherId(UUID teacherId, Pageable pageable);
-
-    boolean existsByIdAndTeacherId(UUID id, UUID teacherId);
+    boolean existsByIdAndTeacherId(Long id, Long teacherId);
 }

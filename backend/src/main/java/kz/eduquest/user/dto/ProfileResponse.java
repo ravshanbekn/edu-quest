@@ -2,10 +2,8 @@ package kz.eduquest.user.dto;
 
 import kz.eduquest.user.entity.UserProfile;
 
-import java.util.UUID;
-
 public record ProfileResponse(
-        UUID userId,
+        Long userId,
         String displayName,
         String avatarUrl,
         String bio,

@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +20,7 @@ public class LessonService {
     private final CourseService courseService;
 
     @Transactional
-    public LessonResponse create(UUID userId, boolean isAdmin, UUID blockId, CreateLessonRequest request) {
+    public LessonResponse create(Long userId, boolean isAdmin, Long blockId, CreateLessonRequest request) {
         Block block = blockService.findBlockOrThrow(blockId);
         courseService.checkOwnerOrAdmin(block.getCourse(), userId, isAdmin);
 
@@ -37,13 +36,13 @@ public class LessonService {
         return LessonResponse.from(lessonRepository.save(lesson));
     }
 
-    public LessonDetailResponse getDetail(UUID lessonId) {
+    public LessonDetailResponse getDetail(Long lessonId) {
         Lesson lesson = findLessonOrThrow(lessonId);
         return LessonDetailResponse.from(lesson);
     }
 
     @Transactional
-    public LessonResponse update(UUID userId, boolean isAdmin, UUID lessonId, UpdateLessonRequest request) {
+    public LessonResponse update(Long userId, boolean isAdmin, Long lessonId, UpdateLessonRequest request) {
         Lesson lesson = findLessonOrThrow(lessonId);
         courseService.checkOwnerOrAdmin(lesson.getBlock().getCourse(), userId, isAdmin);
 
@@ -55,13 +54,13 @@ public class LessonService {
     }
 
     @Transactional
-    public void delete(UUID userId, boolean isAdmin, UUID lessonId) {
+    public void delete(Long userId, boolean isAdmin, Long lessonId) {
         Lesson lesson = findLessonOrThrow(lessonId);
         courseService.checkOwnerOrAdmin(lesson.getBlock().getCourse(), userId, isAdmin);
         lessonRepository.delete(lesson);
     }
 
-    Lesson findLessonOrThrow(UUID lessonId) {
+    Lesson findLessonOrThrow(Long lessonId) {
         return lessonRepository.findById(lessonId)
                 .orElseThrow(() -> new IllegalArgumentException("Lesson not found: " + lessonId));
     }

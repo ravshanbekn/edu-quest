@@ -4,8 +4,8 @@
 
 -- courses
 CREATE TABLE courses (
-    id           UUID         PRIMARY KEY DEFAULT gen_random_uuid(),
-    teacher_id   UUID         NOT NULL REFERENCES users (id),
+    id           BIGSERIAL    PRIMARY KEY,
+    teacher_id   BIGINT       NOT NULL REFERENCES users (id),
     title        VARCHAR(255) NOT NULL,
     description  TEXT,
     cover_url    VARCHAR(500),
@@ -16,8 +16,8 @@ CREATE TABLE courses (
 
 -- blocks (course sections)
 CREATE TABLE blocks (
-    id         UUID         PRIMARY KEY DEFAULT gen_random_uuid(),
-    course_id  UUID         NOT NULL REFERENCES courses (id) ON DELETE CASCADE,
+    id         BIGSERIAL    PRIMARY KEY,
+    course_id  BIGINT       NOT NULL REFERENCES courses (id) ON DELETE CASCADE,
     title      VARCHAR(255) NOT NULL,
     sort_order INT          NOT NULL DEFAULT 0,
     created_at TIMESTAMP    NOT NULL DEFAULT now()
@@ -25,8 +25,8 @@ CREATE TABLE blocks (
 
 -- lessons
 CREATE TABLE lessons (
-    id         UUID         PRIMARY KEY DEFAULT gen_random_uuid(),
-    block_id   UUID         NOT NULL REFERENCES blocks (id) ON DELETE CASCADE,
+    id         BIGSERIAL    PRIMARY KEY,
+    block_id   BIGINT       NOT NULL REFERENCES blocks (id) ON DELETE CASCADE,
     title      VARCHAR(255) NOT NULL,
     type       VARCHAR(50)  NOT NULL DEFAULT 'MIXED',
     sort_order INT          NOT NULL DEFAULT 0,
@@ -36,8 +36,8 @@ CREATE TABLE lessons (
 
 -- lesson_content (polymorphic content blocks inside a lesson)
 CREATE TABLE lesson_content (
-    id           UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
-    lesson_id    UUID        NOT NULL REFERENCES lessons (id) ON DELETE CASCADE,
+    id           BIGSERIAL   PRIMARY KEY,
+    lesson_id    BIGINT      NOT NULL REFERENCES lessons (id) ON DELETE CASCADE,
     content_type VARCHAR(50) NOT NULL,
     body         TEXT,
     video_url    VARCHAR(500),
@@ -46,8 +46,8 @@ CREATE TABLE lesson_content (
 
 -- tasks
 CREATE TABLE tasks (
-    id          UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
-    lesson_id   UUID        NOT NULL REFERENCES lessons (id) ON DELETE CASCADE,
+    id          BIGSERIAL   PRIMARY KEY,
+    lesson_id   BIGINT      NOT NULL REFERENCES lessons (id) ON DELETE CASCADE,
     description TEXT        NOT NULL,
     solution    TEXT,
     task_type   VARCHAR(50) NOT NULL DEFAULT 'TEXT',
@@ -57,8 +57,8 @@ CREATE TABLE tasks (
 
 -- hints (per task)
 CREATE TABLE hints (
-    id         UUID      PRIMARY KEY DEFAULT gen_random_uuid(),
-    task_id    UUID      NOT NULL REFERENCES tasks (id) ON DELETE CASCADE,
+    id         BIGSERIAL PRIMARY KEY,
+    task_id    BIGINT    NOT NULL REFERENCES tasks (id) ON DELETE CASCADE,
     content    TEXT      NOT NULL,
     sort_order INT       NOT NULL DEFAULT 0,
     xp_penalty INT       NOT NULL DEFAULT 10
@@ -66,8 +66,8 @@ CREATE TABLE hints (
 
 -- quizzes
 CREATE TABLE quizzes (
-    id         UUID         PRIMARY KEY DEFAULT gen_random_uuid(),
-    lesson_id  UUID         NOT NULL REFERENCES lessons (id) ON DELETE CASCADE,
+    id         BIGSERIAL    PRIMARY KEY,
+    lesson_id  BIGINT       NOT NULL REFERENCES lessons (id) ON DELETE CASCADE,
     title      VARCHAR(255),
     time_limit INT,
     xp_reward  INT          NOT NULL DEFAULT 100,
@@ -76,12 +76,12 @@ CREATE TABLE quizzes (
 
 -- quiz_questions
 CREATE TABLE quiz_questions (
-    id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    quiz_id    UUID NOT NULL REFERENCES quizzes (id) ON DELETE CASCADE,
-    question   TEXT NOT NULL,
-    options    JSONB NOT NULL,
-    correct    JSONB NOT NULL,
-    sort_order INT   NOT NULL DEFAULT 0
+    id         BIGSERIAL PRIMARY KEY,
+    quiz_id    BIGINT    NOT NULL REFERENCES quizzes (id) ON DELETE CASCADE,
+    question   TEXT      NOT NULL,
+    options    JSONB     NOT NULL,
+    correct    JSONB     NOT NULL,
+    sort_order INT       NOT NULL DEFAULT 0
 );
 
 -- ============================================================

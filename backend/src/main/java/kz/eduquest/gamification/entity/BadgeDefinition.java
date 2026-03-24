@@ -3,7 +3,6 @@ package kz.eduquest.gamification.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.UUID;
 
 @Entity
 @Table(name = "badge_definitions")
@@ -15,8 +14,8 @@ import java.util.UUID;
 public class BadgeDefinition {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(nullable = false, unique = true, length = 100)
     private String name;

@@ -4,13 +4,12 @@ import kz.eduquest.gamification.entity.ActionType;
 import kz.eduquest.gamification.entity.UserXpLog;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 public record XpLogResponse(
-        UUID id,
+        Long id,
         ActionType actionType,
         int xpAmount,
-        UUID referenceId,
+        Long referenceId,
         LocalDateTime createdAt
 ) {
     public static XpLogResponse from(UserXpLog log) {

@@ -5,7 +5,6 @@ import kz.eduquest.user.entity.User;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Table(name = "user_xp_log")
@@ -17,8 +16,8 @@ import java.util.UUID;
 public class UserXpLog {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -34,7 +33,7 @@ public class UserXpLog {
 
     /** ID урока/задачи/квиза, за который начислен XP */
     @Column(name = "reference_id")
-    private UUID referenceId;
+    private Long referenceId;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

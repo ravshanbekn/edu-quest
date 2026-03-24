@@ -9,7 +9,6 @@ import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
@@ -21,7 +20,7 @@ public class JwtService {
     /** Blacklisted refresh token JTIs. TODO: заменить на Redis */
     private final Set<String> blacklistedJtis = ConcurrentHashMap.newKeySet();
 
-    public String generateAccessToken(UUID userId, String email, Set<String> roles) {
+    public String generateAccessToken(Long userId, String email, Set<String> roles) {
         return Jwts.builder()
                 .subject(userId.toString())
                 .claim("email", email)
@@ -32,10 +31,10 @@ public class JwtService {
                 .compact();
     }
 
-    public String generateRefreshToken(UUID userId) {
+    public String generateRefreshToken(Long userId) {
         return Jwts.builder()
                 .subject(userId.toString())
-                .id(UUID.randomUUID().toString())
+                .id(java.util.UUID.randomUUID().toString())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + props.getRefreshExpirationMs()))
                 .signWith(getSigningKey())
@@ -53,6 +52,7 @@ public class JwtService {
     public boolean isValid(String token) {
         try {
             Claims claims = parseToken(token);
+            Long.parseLong(claims.getSubject());
             String jti = claims.getId();
             return jti == null || !blacklistedJtis.contains(jti);
         } catch (JwtException | IllegalArgumentException e) {
@@ -60,8 +60,8 @@ public class JwtService {
         }
     }
 
-    public UUID extractUserId(String token) {
-        return UUID.fromString(parseToken(token).getSubject());
+    public Long extractUserId(String token) {
+        return Long.parseLong(parseToken(token).getSubject());
     }
 
     public void blacklistRefreshToken(String refreshToken) {

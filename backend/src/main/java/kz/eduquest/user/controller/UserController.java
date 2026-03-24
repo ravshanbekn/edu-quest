@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * REST API: Users & Profiles (архитектурный документ §7.2).
@@ -54,7 +53,7 @@ public class UserController {
     /** GET /api/v1/users/{id}/profile — профиль пользователя */
     @GetMapping("/{id}/profile")
     public ResponseEntity<ProfileResponse> getUserProfile(
-            @PathVariable UUID id,
+            @PathVariable Long id,
             @AuthenticationPrincipal UserPrincipal principal) {
         boolean isAdmin = principal.hasRole("ADMIN");
         return ResponseEntity.ok(userService.getProfile(id, principal.getId(), isAdmin));
@@ -71,7 +70,7 @@ public class UserController {
     @PutMapping("/{id}/roles")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponse> assignRoles(
-            @PathVariable UUID id,
+            @PathVariable Long id,
             @RequestBody Set<String> roleNames) {
         return ResponseEntity.ok(userService.assignRoles(id, roleNames));
     }

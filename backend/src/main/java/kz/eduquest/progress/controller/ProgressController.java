@@ -12,7 +12,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,7 +30,7 @@ public class ProgressController {
     @GetMapping("/api/v1/courses/{id}/progress")
     public ResponseEntity<List<UserProgress>> courseProgress(
             @AuthenticationPrincipal UserPrincipal p,
-            @PathVariable UUID id) {
+            @PathVariable Long id) {
         // Фильтруем прогресс по урокам данного курса
         List<UserProgress> all = progressRepository.findByUserId(p.getId());
         List<UserProgress> forCourse = all.stream()
@@ -45,7 +44,7 @@ public class ProgressController {
     @PreAuthorize("hasRole('STUDENT')")
     public ResponseEntity<UserProgress> completeLesson(
             @AuthenticationPrincipal UserPrincipal p,
-            @PathVariable UUID id) {
+            @PathVariable Long id) {
         return ResponseEntity.ok(progressService.completeLesson(p.getId(), id));
     }
 }

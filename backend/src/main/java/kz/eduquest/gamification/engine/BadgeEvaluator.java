@@ -19,7 +19,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Badge Evaluator — слушает события и проверяет условия для выдачи бейджей (§6.3, §6.4).
@@ -61,7 +60,7 @@ public class BadgeEvaluator {
         evaluateAndAward(event.userId());
     }
 
-    private void evaluateAndAward(UUID userId) {
+    private void evaluateAndAward(Long userId) {
         List<BadgeDefinition> unearned = badgeDefinitionRepository.findUnearnedByUser(userId);
 
         for (BadgeDefinition badge : unearned) {
@@ -77,7 +76,7 @@ public class BadgeEvaluator {
         }
     }
 
-    private boolean conditionMet(UUID userId, BadgeDefinition badge) {
+    private boolean conditionMet(Long userId, BadgeDefinition badge) {
         int required = badge.getConditionValue();
 
         return switch (badge.getConditionType()) {
@@ -91,11 +90,11 @@ public class BadgeEvaluator {
         };
     }
 
-    private long countCompletedLessons(UUID userId) {
+    private long countCompletedLessons(Long userId) {
         return progressRepository.findByUserIdAndStatus(userId, ProgressStatus.COMPLETED).size();
     }
 
-    private long countCompletedCourses(UUID userId) {
+    private long countCompletedCourses(Long userId) {
         // Считаем по XP логу с типом COURSE_COMPLETE
         return xpLogRepository.findByUserIdOrderByCreatedAtDesc(userId, org.springframework.data.domain.Pageable.unpaged())
                 .stream()
@@ -103,7 +102,7 @@ public class BadgeEvaluator {
                 .count();
     }
 
-    private long countSolvedTasks(UUID userId) {
+    private long countSolvedTasks(Long userId) {
         // Уникальные решённые задачи через XP лог
         return xpLogRepository.findByUserIdOrderByCreatedAtDesc(userId, org.springframework.data.domain.Pageable.unpaged())
                 .stream()
@@ -111,13 +110,13 @@ public class BadgeEvaluator {
                 .count();
     }
 
-    private int getCurrentLevel(UUID userId) {
+    private int getCurrentLevel(Long userId) {
         return levelRepository.findByUserId(userId)
                 .map(kz.eduquest.gamification.entity.UserLevel::getCurrentLevel)
                 .orElse(1);
     }
 
-    private int getTotalXp(UUID userId) {
+    private int getTotalXp(Long userId) {
         return levelRepository.findByUserId(userId)
                 .map(kz.eduquest.gamification.entity.UserLevel::getTotalXp)
                 .orElse(0);

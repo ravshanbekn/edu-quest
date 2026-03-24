@@ -3,10 +3,9 @@ package kz.eduquest.gamification.dto;
 import kz.eduquest.gamification.entity.UserBadge;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 public record BadgeResponse(
-        UUID badgeId,
+        Long badgeId,
         String name,
         String description,
         String iconUrl,

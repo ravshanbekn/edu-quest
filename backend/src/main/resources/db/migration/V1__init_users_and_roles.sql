@@ -4,7 +4,7 @@
 
 -- users
 CREATE TABLE users (
-    id            UUID         PRIMARY KEY DEFAULT gen_random_uuid(),
+    id            BIGSERIAL    PRIMARY KEY,
     email         VARCHAR(255) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     is_active     BOOLEAN      NOT NULL DEFAULT true,
@@ -14,8 +14,8 @@ CREATE TABLE users (
 
 -- user_profiles (one-to-one with users)
 CREATE TABLE user_profiles (
-    id           UUID         PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id      UUID         NOT NULL UNIQUE REFERENCES users (id) ON DELETE CASCADE,
+    id           BIGSERIAL    PRIMARY KEY,
+    user_id      BIGINT       NOT NULL UNIQUE REFERENCES users (id) ON DELETE CASCADE,
     display_name VARCHAR(100),
     avatar_url   VARCHAR(500),
     bio          TEXT,
@@ -26,29 +26,29 @@ CREATE TABLE user_profiles (
 
 -- roles
 CREATE TABLE roles (
-    id          UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
+    id          BIGSERIAL   PRIMARY KEY,
     name        VARCHAR(50) NOT NULL UNIQUE,
     description TEXT
 );
 
 -- permissions
 CREATE TABLE permissions (
-    id          UUID         PRIMARY KEY DEFAULT gen_random_uuid(),
+    id          BIGSERIAL    PRIMARY KEY,
     code        VARCHAR(100) NOT NULL UNIQUE,
     description TEXT
 );
 
 -- user → roles (many-to-many)
 CREATE TABLE user_roles (
-    user_id UUID NOT NULL REFERENCES users (id) ON DELETE CASCADE,
-    role_id UUID NOT NULL REFERENCES roles (id) ON DELETE CASCADE,
+    user_id BIGINT NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+    role_id BIGINT NOT NULL REFERENCES roles (id) ON DELETE CASCADE,
     PRIMARY KEY (user_id, role_id)
 );
 
 -- role → permissions (many-to-many)
 CREATE TABLE role_permissions (
-    role_id       UUID NOT NULL REFERENCES roles (id) ON DELETE CASCADE,
-    permission_id UUID NOT NULL REFERENCES permissions (id) ON DELETE CASCADE,
+    role_id       BIGINT NOT NULL REFERENCES roles (id) ON DELETE CASCADE,
+    permission_id BIGINT NOT NULL REFERENCES permissions (id) ON DELETE CASCADE,
     PRIMARY KEY (role_id, permission_id)
 );
 

@@ -6,11 +6,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
-import java.util.UUID;
 
-public interface UserLevelRepository extends JpaRepository<UserLevel, UUID> {
+public interface UserLevelRepository extends JpaRepository<UserLevel, Long> {
 
-    Optional<UserLevel> findByUserId(UUID userId);
+    Optional<UserLevel> findByUserId(Long userId);
 
     Page<UserLevel> findAllByOrderByTotalXpDesc(Pageable pageable);
 }

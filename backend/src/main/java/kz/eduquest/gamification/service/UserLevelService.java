@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
 
 /**
  * Управление XP и уровнями.
@@ -22,7 +21,7 @@ public class UserLevelService {
     private final UserRepository userRepository;
 
     @Transactional
-    public UserLevel addXp(UUID userId, int xpAmount) {
+    public UserLevel addXp(Long userId, int xpAmount) {
         UserLevel level = levelRepository.findByUserId(userId)
                 .orElseGet(() -> createInitialLevel(userId));
 
@@ -35,7 +34,7 @@ public class UserLevelService {
         return levelRepository.save(level);
     }
 
-    public UserLevel getLevel(UUID userId) {
+    public UserLevel getLevel(Long userId) {
         return levelRepository.findByUserId(userId)
                 .orElseGet(() -> createInitialLevel(userId));
     }
@@ -59,7 +58,7 @@ public class UserLevelService {
         return level;
     }
 
-    private UserLevel createInitialLevel(UUID userId) {
+    private UserLevel createInitialLevel(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found: " + userId));
         return levelRepository.save(

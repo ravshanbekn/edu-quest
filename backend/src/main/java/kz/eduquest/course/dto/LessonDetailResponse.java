@@ -3,10 +3,9 @@ package kz.eduquest.course.dto;
 import kz.eduquest.course.entity.*;
 
 import java.util.List;
-import java.util.UUID;
 
 public record LessonDetailResponse(
-        UUID id,
+        Long id,
         String title,
         LessonType type,
         int xpReward,
@@ -23,19 +22,19 @@ public record LessonDetailResponse(
         );
     }
 
-    public record ContentResponse(UUID id, ContentType contentType, String body, String videoUrl, int sortOrder) {
+    public record ContentResponse(Long id, ContentType contentType, String body, String videoUrl, int sortOrder) {
         static ContentResponse from(LessonContent c) {
             return new ContentResponse(c.getId(), c.getContentType(), c.getBody(), c.getVideoUrl(), c.getSortOrder());
         }
     }
 
-    public record TaskResponse(UUID id, String description, TaskType taskType, int xpReward, int hintCount) {
+    public record TaskResponse(Long id, String description, TaskType taskType, int xpReward, int hintCount) {
         static TaskResponse from(Task t) {
             return new TaskResponse(t.getId(), t.getDescription(), t.getTaskType(), t.getXpReward(), t.getHints().size());
         }
     }
 
-    public record QuizBriefResponse(UUID id, String title, Integer timeLimit, int xpReward, int questionCount) {
+    public record QuizBriefResponse(Long id, String title, Integer timeLimit, int xpReward, int questionCount) {
         static QuizBriefResponse from(Quiz q) {
             return new QuizBriefResponse(q.getId(), q.getTitle(), q.getTimeLimit(), q.getXpReward(), q.getQuestions().size());
         }

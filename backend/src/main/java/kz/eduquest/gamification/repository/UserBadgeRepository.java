@@ -4,11 +4,10 @@ import kz.eduquest.gamification.entity.UserBadge;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.UUID;
 
-public interface UserBadgeRepository extends JpaRepository<UserBadge, UUID> {
+public interface UserBadgeRepository extends JpaRepository<UserBadge, Long> {
 
-    List<UserBadge> findByUserId(UUID userId);
+    List<UserBadge> findByUserId(Long userId);
 
-    boolean existsByUserIdAndBadgeId(UUID userId, UUID badgeId);
+    boolean existsByUserIdAndBadgeId(Long userId, Long badgeId);
 }

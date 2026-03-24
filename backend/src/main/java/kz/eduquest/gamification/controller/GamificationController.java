@@ -16,7 +16,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
@@ -47,7 +46,7 @@ public class GamificationController {
 
     /** GET /api/v1/users/{id}/badges — бейджи пользователя */
     @GetMapping("/api/v1/users/{id}/badges")
-    public ResponseEntity<List<BadgeResponse>> userBadges(@PathVariable UUID id) {
+    public ResponseEntity<List<BadgeResponse>> userBadges(@PathVariable Long id) {
         return ResponseEntity.ok(
                 badgeRepository.findByUserId(id).stream().map(BadgeResponse::from).toList()
         );

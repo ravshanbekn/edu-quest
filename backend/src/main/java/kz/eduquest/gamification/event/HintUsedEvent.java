@@ -1,5 +1,3 @@
 package kz.eduquest.gamification.event;
 
-import java.util.UUID;
-
-public record HintUsedEvent(UUID userId, UUID hintId, UUID taskId) {}
+public record HintUsedEvent(Long userId, Long hintId, Long taskId) {}

@@ -3,11 +3,10 @@ package kz.eduquest.course.dto;
 import kz.eduquest.course.entity.Course;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 public record CourseResponse(
-        UUID id,
-        UUID teacherId,
+        Long id,
+        Long teacherId,
         String title,
         String description,
         String coverUrl,

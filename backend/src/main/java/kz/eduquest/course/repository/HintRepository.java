@@ -4,9 +4,10 @@ import kz.eduquest.course.entity.Hint;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.UUID;
 
-public interface HintRepository extends JpaRepository<Hint, UUID> {
+public interface HintRepository extends JpaRepository<Hint, Long> {
 
-    List<Hint> findByTaskIdOrderBySortOrder(UUID taskId);
+    List<Hint> findByTaskIdOrderBySortOrder(Long taskId);
+
+    java.util.Optional<Hint> findByTaskIdAndSortOrder(Long taskId, int sortOrder);
 }

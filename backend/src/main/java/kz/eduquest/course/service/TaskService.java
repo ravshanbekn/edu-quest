@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +23,7 @@ public class TaskService {
     private final CourseService courseService;
 
     @Transactional
-    public TaskResponse create(UUID userId, boolean isAdmin, UUID lessonId, CreateTaskRequest request) {
+    public TaskResponse create(Long userId, boolean isAdmin, Long lessonId, CreateTaskRequest request) {
         Lesson lesson = lessonService.findLessonOrThrow(lessonId);
         courseService.checkOwnerOrAdmin(lesson.getBlock().getCourse(), userId, isAdmin);
 
@@ -42,7 +41,7 @@ public class TaskService {
     }
 
     @Transactional
-    public TaskResponse update(UUID userId, boolean isAdmin, UUID taskId, UpdateTaskRequest request) {
+    public TaskResponse update(Long userId, boolean isAdmin, Long taskId, UpdateTaskRequest request) {
         Task task = findTaskOrThrow(taskId);
         courseService.checkOwnerOrAdmin(task.getLesson().getBlock().getCourse(), userId, isAdmin);
 
@@ -55,7 +54,7 @@ public class TaskService {
     }
 
     @Transactional
-    public void addHint(UUID userId, boolean isAdmin, UUID taskId, CreateHintRequest request) {
+    public void addHint(Long userId, boolean isAdmin, Long taskId, CreateHintRequest request) {
         Task task = findTaskOrThrow(taskId);
         courseService.checkOwnerOrAdmin(task.getLesson().getBlock().getCourse(), userId, isAdmin);
 
@@ -71,7 +70,7 @@ public class TaskService {
         );
     }
 
-    Task findTaskOrThrow(UUID taskId) {
+    Task findTaskOrThrow(Long taskId) {
         return taskRepository.findById(taskId)
                 .orElseThrow(() -> new IllegalArgumentException("Task not found: " + taskId));
     }

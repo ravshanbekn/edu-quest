@@ -4,9 +4,8 @@ import kz.eduquest.course.entity.Quiz;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.UUID;
 
-public interface QuizRepository extends JpaRepository<Quiz, UUID> {
+public interface QuizRepository extends JpaRepository<Quiz, Long> {
 
-    List<Quiz> findByLessonId(UUID lessonId);
+    List<Quiz> findByLessonId(Long lessonId);
 }

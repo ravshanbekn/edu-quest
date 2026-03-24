@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +25,7 @@ public class EnrollmentService {
 
     /** Самозапись студента */
     @Transactional
-    public EnrollmentResponse selfEnroll(UUID studentId, UUID courseId) {
+    public EnrollmentResponse selfEnroll(Long studentId, Long courseId) {
         Course course = courseService.findCourseOrThrow(courseId);
         if (!course.isPublished()) {
             throw new IllegalArgumentException("Cannot enroll in unpublished course");
@@ -36,7 +35,7 @@ public class EnrollmentService {
 
     /** Запись учителем / админом */
     @Transactional
-    public EnrollmentResponse enrollByTeacher(UUID teacherId, boolean isAdmin, UUID courseId, UUID studentId) {
+    public EnrollmentResponse enrollByTeacher(Long teacherId, boolean isAdmin, Long courseId, Long studentId) {
         Course course = courseService.findCourseOrThrow(courseId);
         courseService.checkOwnerOrAdmin(course, teacherId, isAdmin);
         return enroll(studentId, courseId, teacherId);
@@ -44,7 +43,7 @@ public class EnrollmentService {
 
     /** Отписать студента */
     @Transactional
-    public void unenroll(UUID teacherId, boolean isAdmin, UUID courseId, UUID studentId) {
+    public void unenroll(Long teacherId, boolean isAdmin, Long courseId, Long studentId) {
         Course course = courseService.findCourseOrThrow(courseId);
         courseService.checkOwnerOrAdmin(course, teacherId, isAdmin);
 
@@ -55,11 +54,11 @@ public class EnrollmentService {
     }
 
     /** Мои курсы */
-    public Page<EnrollmentResponse> getMyEnrollments(UUID userId, Pageable pageable) {
+    public Page<EnrollmentResponse> getMyEnrollments(Long userId, Pageable pageable) {
         return enrollmentRepository.findByUserId(userId, pageable).map(EnrollmentResponse::from);
     }
 
-    private EnrollmentResponse enroll(UUID studentId, UUID courseId, UUID enrolledById) {
+    private EnrollmentResponse enroll(Long studentId, Long courseId, Long enrolledById) {
         if (enrollmentRepository.existsByUserIdAndCourseId(studentId, courseId)) {
             throw new IllegalArgumentException("Already enrolled in this course");
         }

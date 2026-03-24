@@ -14,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +25,7 @@ public class CourseService {
     private final EnrollmentRepository enrollmentRepository;
 
     @Transactional
-    public CourseResponse create(UUID teacherId, CreateCourseRequest request) {
+    public CourseResponse create(Long teacherId, CreateCourseRequest request) {
         User teacher = userRepository.getReferenceById(teacherId);
         Course course = Course.builder()
                 .teacher(teacher)
@@ -37,15 +36,15 @@ public class CourseService {
     }
 
     public Page<CourseResponse> getCatalog(Pageable pageable) {
-        return courseRepository.findByPublishedTrue(pageable).map(CourseResponse::from);
+        return courseRepository.findAll(pageable).map(CourseResponse::from);
     }
 
-    public CourseResponse getCourse(UUID courseId) {
-        return CourseResponse.from(findCourseOrThrow(courseId));
+    public CourseDetailResponse getCourse(Long courseId) {
+        return CourseDetailResponse.from(findCourseOrThrow(courseId));
     }
 
     @Transactional
-    public CourseResponse update(UUID userId, boolean isAdmin, UUID courseId, UpdateCourseRequest request) {
+    public CourseResponse update(Long userId, boolean isAdmin, Long courseId, UpdateCourseRequest request) {
         Course course = findCourseOrThrow(courseId);
         checkOwnerOrAdmin(course, userId, isAdmin);
 
@@ -57,21 +56,21 @@ public class CourseService {
     }
 
     @Transactional
-    public void delete(UUID userId, boolean isAdmin, UUID courseId) {
+    public void delete(Long userId, boolean isAdmin, Long courseId) {
         Course course = findCourseOrThrow(courseId);
         checkOwnerOrAdmin(course, userId, isAdmin);
         courseRepository.delete(course);
     }
 
     @Transactional
-    public CourseResponse publish(UUID userId, boolean isAdmin, UUID courseId) {
+    public CourseResponse publish(Long userId, boolean isAdmin, Long courseId) {
         Course course = findCourseOrThrow(courseId);
         checkOwnerOrAdmin(course, userId, isAdmin);
         course.setPublished(true);
         return CourseResponse.from(courseRepository.save(course));
     }
 
-    public Page<UserResponse> getStudents(UUID userId, boolean isAdmin, UUID courseId, Pageable pageable) {
+    public Page<UserResponse> getStudents(Long userId, boolean isAdmin, Long courseId, Pageable pageable) {
         Course course = findCourseOrThrow(courseId);
         checkOwnerOrAdmin(course, userId, isAdmin);
         return enrollmentRepository.findByCourseIdAndStatus(courseId, EnrollmentStatus.ACTIVE, pageable)
@@ -83,12 +82,12 @@ public class CourseService {
 
     // ── helpers ──
 
-    public Course findCourseOrThrow(UUID courseId) {
+    public Course findCourseOrThrow(Long courseId) {
         return courseRepository.findById(courseId)
                 .orElseThrow(() -> new IllegalArgumentException("Course not found: " + courseId));
     }
 
-    public void checkOwnerOrAdmin(Course course, UUID userId, boolean isAdmin) {
+    public void checkOwnerOrAdmin(Course course, Long userId, boolean isAdmin) {
         if (!isAdmin && !course.getTeacher().getId().equals(userId)) {
             throw new org.springframework.security.access.AccessDeniedException("Not the course owner");
         }

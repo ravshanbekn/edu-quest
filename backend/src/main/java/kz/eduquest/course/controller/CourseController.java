@@ -14,8 +14,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/courses")
@@ -37,7 +35,7 @@ public class CourseController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CourseResponse> getCourse(@PathVariable UUID id) {
+    public ResponseEntity<CourseDetailResponse> getCourse(@PathVariable Long id) {
         return ResponseEntity.ok(courseService.getCourse(id));
     }
 
@@ -45,7 +43,7 @@ public class CourseController {
     @PreAuthorize("hasAnyRole('TEACHER','ADMIN')")
     public ResponseEntity<CourseResponse> update(
             @AuthenticationPrincipal UserPrincipal p,
-            @PathVariable UUID id,
+            @PathVariable Long id,
             @Valid @RequestBody UpdateCourseRequest request) {
         return ResponseEntity.ok(courseService.update(p.getId(), p.hasRole("ADMIN"), id, request));
     }
@@ -54,7 +52,7 @@ public class CourseController {
     @PreAuthorize("hasAnyRole('TEACHER','ADMIN')")
     public ResponseEntity<Void> delete(
             @AuthenticationPrincipal UserPrincipal p,
-            @PathVariable UUID id) {
+            @PathVariable Long id) {
         courseService.delete(p.getId(), p.hasRole("ADMIN"), id);
         return ResponseEntity.noContent().build();
     }
@@ -63,7 +61,7 @@ public class CourseController {
     @PreAuthorize("hasAnyRole('TEACHER','ADMIN')")
     public ResponseEntity<CourseResponse> publish(
             @AuthenticationPrincipal UserPrincipal p,
-            @PathVariable UUID id) {
+            @PathVariable Long id) {
         return ResponseEntity.ok(courseService.publish(p.getId(), p.hasRole("ADMIN"), id));
     }
 
@@ -71,7 +69,7 @@ public class CourseController {
     @PreAuthorize("hasAnyRole('TEACHER','ADMIN')")
     public ResponseEntity<Page<UserResponse>> getStudents(
             @AuthenticationPrincipal UserPrincipal p,
-            @PathVariable UUID id,
+            @PathVariable Long id,
             Pageable pageable) {
         return ResponseEntity.ok(courseService.getStudents(p.getId(), p.hasRole("ADMIN"), id, pageable));
     }

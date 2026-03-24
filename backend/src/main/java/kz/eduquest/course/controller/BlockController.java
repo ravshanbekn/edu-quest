@@ -12,7 +12,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,7 +23,7 @@ public class BlockController {
     @PostMapping("/api/v1/courses/{courseId}/blocks")
     public ResponseEntity<BlockResponse> create(
             @AuthenticationPrincipal UserPrincipal p,
-            @PathVariable UUID courseId,
+            @PathVariable Long courseId,
             @Valid @RequestBody CreateBlockRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(blockService.create(p.getId(), p.hasRole("ADMIN"), courseId, request));
@@ -33,7 +32,7 @@ public class BlockController {
     @PutMapping("/api/v1/blocks/{id}")
     public ResponseEntity<BlockResponse> update(
             @AuthenticationPrincipal UserPrincipal p,
-            @PathVariable UUID id,
+            @PathVariable Long id,
             @Valid @RequestBody UpdateBlockRequest request) {
         return ResponseEntity.ok(blockService.update(p.getId(), p.hasRole("ADMIN"), id, request));
     }
@@ -41,7 +40,7 @@ public class BlockController {
     @DeleteMapping("/api/v1/blocks/{id}")
     public ResponseEntity<Void> delete(
             @AuthenticationPrincipal UserPrincipal p,
-            @PathVariable UUID id) {
+            @PathVariable Long id) {
         blockService.delete(p.getId(), p.hasRole("ADMIN"), id);
         return ResponseEntity.noContent().build();
     }
@@ -49,7 +48,7 @@ public class BlockController {
     @PutMapping("/api/v1/courses/{courseId}/blocks/reorder")
     public ResponseEntity<List<BlockResponse>> reorder(
             @AuthenticationPrincipal UserPrincipal p,
-            @PathVariable UUID courseId,
+            @PathVariable Long courseId,
             @Valid @RequestBody ReorderRequest request) {
         return ResponseEntity.ok(blockService.reorder(p.getId(), p.hasRole("ADMIN"), courseId, request));
     }

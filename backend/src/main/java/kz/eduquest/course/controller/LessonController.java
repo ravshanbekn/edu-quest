@@ -11,8 +11,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
-
 @RestController
 @RequiredArgsConstructor
 public class LessonController {
@@ -23,14 +21,14 @@ public class LessonController {
     @PreAuthorize("hasAnyRole('TEACHER','ADMIN')")
     public ResponseEntity<LessonResponse> create(
             @AuthenticationPrincipal UserPrincipal p,
-            @PathVariable UUID blockId,
+            @PathVariable Long blockId,
             @Valid @RequestBody CreateLessonRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(lessonService.create(p.getId(), p.hasRole("ADMIN"), blockId, request));
     }
 
     @GetMapping("/api/v1/lessons/{id}")
-    public ResponseEntity<LessonDetailResponse> getDetail(@PathVariable UUID id) {
+    public ResponseEntity<LessonDetailResponse> getDetail(@PathVariable Long id) {
         return ResponseEntity.ok(lessonService.getDetail(id));
     }
 
@@ -38,7 +36,7 @@ public class LessonController {
     @PreAuthorize("hasAnyRole('TEACHER','ADMIN')")
     public ResponseEntity<LessonResponse> update(
             @AuthenticationPrincipal UserPrincipal p,
-            @PathVariable UUID id,
+            @PathVariable Long id,
             @Valid @RequestBody UpdateLessonRequest request) {
         return ResponseEntity.ok(lessonService.update(p.getId(), p.hasRole("ADMIN"), id, request));
     }
@@ -47,7 +45,7 @@ public class LessonController {
     @PreAuthorize("hasAnyRole('TEACHER','ADMIN')")
     public ResponseEntity<Void> delete(
             @AuthenticationPrincipal UserPrincipal p,
-            @PathVariable UUID id) {
+            @PathVariable Long id) {
         lessonService.delete(p.getId(), p.hasRole("ADMIN"), id);
         return ResponseEntity.noContent().build();
     }
