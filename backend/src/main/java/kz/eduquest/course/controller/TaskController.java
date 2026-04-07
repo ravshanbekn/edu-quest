@@ -5,7 +5,7 @@ import kz.eduquest.common.security.UserPrincipal;
 import kz.eduquest.course.dto.*;
 import kz.eduquest.course.service.TaskService;
 import kz.eduquest.progress.dto.SubmitTaskRequest;
-import kz.eduquest.progress.entity.TaskSubmission;
+import kz.eduquest.progress.dto.TaskSubmissionResponse;
 import kz.eduquest.progress.service.ProgressService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,41 +22,41 @@ public class TaskController {
     private final ProgressService progressService;
 
     @PostMapping("/api/v1/lessons/{lessonId}/tasks")
-    @PreAuthorize("hasAnyRole('TEACHER','ADMIN')")
+    @PreAuthorize("hasAuthority('course:manage_own')")
     public ResponseEntity<TaskResponse> create(
             @AuthenticationPrincipal UserPrincipal p,
             @PathVariable Long lessonId,
             @Valid @RequestBody CreateTaskRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(taskService.create(p.getId(), p.hasRole("ADMIN"), lessonId, request));
+                .body(taskService.create(p.getId(), p.hasPermission("course:manage_all"), lessonId, request));
     }
 
     @PutMapping("/api/v1/tasks/{id}")
-    @PreAuthorize("hasAnyRole('TEACHER','ADMIN')")
+    @PreAuthorize("hasAuthority('course:manage_own')")
     public ResponseEntity<TaskResponse> update(
             @AuthenticationPrincipal UserPrincipal p,
             @PathVariable Long id,
             @Valid @RequestBody UpdateTaskRequest request) {
-        return ResponseEntity.ok(taskService.update(p.getId(), p.hasRole("ADMIN"), id, request));
+        return ResponseEntity.ok(taskService.update(p.getId(), p.hasPermission("course:manage_all"), id, request));
     }
 
     @PostMapping("/api/v1/tasks/{id}/hints")
-    @PreAuthorize("hasAnyRole('TEACHER','ADMIN')")
+    @PreAuthorize("hasAuthority('course:manage_own')")
     public ResponseEntity<Void> addHint(
             @AuthenticationPrincipal UserPrincipal p,
             @PathVariable Long id,
             @Valid @RequestBody CreateHintRequest request) {
-        taskService.addHint(p.getId(), p.hasRole("ADMIN"), id, request);
+        taskService.addHint(p.getId(), p.hasPermission("course:manage_all"), id, request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/api/v1/tasks/{id}/submit")
-    @PreAuthorize("hasRole('STUDENT')")
-    public ResponseEntity<TaskSubmission> submit(
+    @PreAuthorize("hasAuthority('task:submit')")
+    public ResponseEntity<TaskSubmissionResponse> submit(
             @AuthenticationPrincipal UserPrincipal p,
             @PathVariable Long id,
             @Valid @RequestBody SubmitTaskRequest request) {
-        return ResponseEntity.ok(progressService.submitTask(p.getId(), id, request.answer()));
+        return ResponseEntity.ok(TaskSubmissionResponse.from(progressService.submitTask(p.getId(), id, request.answer())));
     }
 
     @PostMapping("/api/v1/tasks/{id}/hints/{hintOrder}/reveal")

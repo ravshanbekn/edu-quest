@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@PreAuthorize("hasAnyRole('TEACHER','ADMIN')")
+@PreAuthorize("hasAuthority('course:manage_own')")
 public class BlockController {
 
     private final BlockService blockService;
@@ -26,7 +26,7 @@ public class BlockController {
             @PathVariable Long courseId,
             @Valid @RequestBody CreateBlockRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(blockService.create(p.getId(), p.hasRole("ADMIN"), courseId, request));
+                .body(blockService.create(p.getId(), p.hasPermission("course:manage_all"), courseId, request));
     }
 
     @PutMapping("/api/v1/blocks/{id}")
@@ -34,14 +34,14 @@ public class BlockController {
             @AuthenticationPrincipal UserPrincipal p,
             @PathVariable Long id,
             @Valid @RequestBody UpdateBlockRequest request) {
-        return ResponseEntity.ok(blockService.update(p.getId(), p.hasRole("ADMIN"), id, request));
+        return ResponseEntity.ok(blockService.update(p.getId(), p.hasPermission("course:manage_all"), id, request));
     }
 
     @DeleteMapping("/api/v1/blocks/{id}")
     public ResponseEntity<Void> delete(
             @AuthenticationPrincipal UserPrincipal p,
             @PathVariable Long id) {
-        blockService.delete(p.getId(), p.hasRole("ADMIN"), id);
+        blockService.delete(p.getId(), p.hasPermission("course:manage_all"), id);
         return ResponseEntity.noContent().build();
     }
 
@@ -50,6 +50,6 @@ public class BlockController {
             @AuthenticationPrincipal UserPrincipal p,
             @PathVariable Long courseId,
             @Valid @RequestBody ReorderRequest request) {
-        return ResponseEntity.ok(blockService.reorder(p.getId(), p.hasRole("ADMIN"), courseId, request));
+        return ResponseEntity.ok(blockService.reorder(p.getId(), p.hasPermission("course:manage_all"), courseId, request));
     }
 }

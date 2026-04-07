@@ -1,0 +1,149 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap");
+@import "tailwindcss";
+
+/*
+ * Class-based dark mode.
+ * JS добавляет/убирает класс .dark на <html>.
+ * dark: utilities реагируют на этот класс.
+ */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ============================================================
+   DESIGN TOKENS — Light Mode (default)
+   ============================================================ */
+@theme {
+  /* --- Interactive / Brand --- */
+  --color-primary:            hsl(243 75% 57%);   /* electric indigo — видима на белом И на тёмном */
+  --color-primary-foreground: hsl(0 0% 100%);     /* white — всегда */
+
+  /* --- Backgrounds --- */
+  --color-background:         hsl(220 20% 97%);   /* тёплый off-white, мягче чем #fff */
+  --color-foreground:         hsl(222 47% 10%);   /* тёмно-синий текст */
+  --color-card:               hsl(0 0% 100%);
+  --color-card-foreground:    hsl(222 47% 10%);
+  --color-popover:            hsl(0 0% 100%);
+  --color-popover-foreground: hsl(222 47% 10%);
+
+  /* --- Neutral --- */
+  --color-secondary:            hsl(220 14% 92%);
+  --color-secondary-foreground: hsl(222 47% 10%);
+  --color-accent:               hsl(243 40% 94%);  /* лёгкий indigo-tint для hover */
+  --color-accent-foreground:    hsl(243 75% 40%);
+  --color-muted:                hsl(220 14% 93%);
+  --color-muted-foreground:     hsl(215 16% 47%);
+  --color-border:               hsl(220 13% 87%);
+  --color-input:                hsl(220 13% 87%);
+  --color-ring:                 hsl(243 75% 57%);
+
+  /* --- Semantic --- */
+  --color-destructive:            hsl(0 84% 60%);
+  --color-destructive-foreground: hsl(0 0% 100%);
+
+  /* --- Sidebar (тёмный в обоих режимах — game-nav feel) --- */
+  --color-sidebar:                  hsl(224 35% 11%);
+  --color-sidebar-foreground:       hsl(215 18% 62%);
+  --color-sidebar-border:           hsl(224 35% 18%);
+  --color-sidebar-accent:           hsl(224 35% 18%);
+  --color-sidebar-accent-foreground:hsl(213 20% 88%);
+
+  /* --- Геймификация --- */
+  --color-xp:               hsl(38 92% 50%);   /* amber — XP, очки */
+  --color-xp-foreground:    hsl(0 0% 100%);
+  --color-level:            hsl(262 83% 58%);  /* violet — уровни */
+  --color-level-foreground: hsl(0 0% 100%);
+
+  /* --- Радиусы --- */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+
+  /* --- Шрифты --- */
+  --font-sans:    "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Nunito", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* ============================================================
+   DARK MODE OVERRIDES
+   Применяется когда <html> имеет класс .dark
+   ============================================================ */
+.dark {
+  color-scheme: dark;
+
+  /* --- Interactive / Brand --- */
+  --color-primary:            hsl(243 80% 68%);   /* чуть ярче для тёмного фона */
+  --color-primary-foreground: hsl(0 0% 100%);
+
+  /* --- Backgrounds --- */
+  --color-background:         hsl(224 40% 7%);
+  --color-foreground:         hsl(213 25% 90%);
+  --color-card:               hsl(224 38% 11%);
+  --color-card-foreground:    hsl(213 25% 90%);
+  --color-popover:            hsl(224 38% 11%);
+  --color-popover-foreground: hsl(213 25% 90%);
+
+  /* --- Neutral --- */
+  --color-secondary:            hsl(224 30% 16%);
+  --color-secondary-foreground: hsl(213 25% 90%);
+  --color-accent:               hsl(243 30% 20%);
+  --color-accent-foreground:    hsl(243 80% 80%);
+  --color-muted:                hsl(224 30% 15%);
+  --color-muted-foreground:     hsl(215 18% 52%);
+  --color-border:               hsl(224 30% 18%);
+  --color-input:                hsl(224 30% 18%);
+  --color-ring:                 hsl(243 80% 68%);
+
+  /* --- Semantic --- */
+  --color-destructive:            hsl(0 72% 55%);
+  --color-destructive-foreground: hsl(0 0% 100%);
+
+  /* --- Sidebar (ещё темнее в dark mode) --- */
+  --color-sidebar:                  hsl(224 40% 5%);
+  --color-sidebar-foreground:       hsl(215 16% 55%);
+  --color-sidebar-border:           hsl(224 35% 12%);
+  --color-sidebar-accent:           hsl(224 35% 12%);
+  --color-sidebar-accent-foreground:hsl(213 22% 82%);
+
+  /* --- Геймификация (ярче в темноте) --- */
+  --color-xp:    hsl(38 95% 57%);
+  --color-level: hsl(262 90% 70%);
+}
+
+/* ============================================================
+   KEYFRAMES
+   ============================================================ */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes theme-flip {
+  0%   { transform: rotate(0deg) scale(1); }
+  50%  { transform: rotate(180deg) scale(0.7); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+  }
+}

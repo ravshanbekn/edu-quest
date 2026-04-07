@@ -73,17 +73,24 @@ public class ProgressService {
         boolean isCorrect = task.getSolution() != null
                 && task.getSolution().trim().equalsIgnoreCase(answer.trim());
 
+        // Проверяем ДО сохранения, иначе запрос найдёт только что сохранённый submission
+        boolean alreadyEarnedXp = isCorrect
+                && submissionRepository.existsByUserIdAndTaskIdAndCorrectTrue(userId, taskId);
+        boolean isFirstCorrect = isCorrect && !alreadyEarnedXp;
+
+        // xpEarned: 75 = первое правильное, -1 = XP уже получен ранее, 0 = неверный ответ
+        int xpEarned = isFirstCorrect ? 75 : (alreadyEarnedXp ? -1 : 0);
+
         TaskSubmission submission = TaskSubmission.builder()
                 .user(userRepository.getReferenceById(userId))
                 .task(task)
                 .answer(answer)
                 .correct(isCorrect)
-                .xpEarned(0)
+                .xpEarned(xpEarned)
                 .build();
         submissionRepository.save(submission);
 
-        // XP только за первое правильное решение (§9.5)
-        if (isCorrect && !submissionRepository.existsByUserIdAndTaskIdAndCorrectTrue(userId, taskId)) {
+        if (isFirstCorrect) {
             eventPublisher.publishEvent(new TaskSolvedEvent(userId, taskId));
         }
 

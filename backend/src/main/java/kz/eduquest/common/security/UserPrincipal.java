@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Getter
 public class UserPrincipal implements UserDetails {
@@ -18,6 +19,7 @@ public class UserPrincipal implements UserDetails {
     private final String password;
     private final boolean active;
     private final Set<String> roles;
+    private final Set<String> permissions;
     private final Collection<? extends GrantedAuthority> authorities;
 
     public UserPrincipal(User user) {
@@ -28,9 +30,14 @@ public class UserPrincipal implements UserDetails {
         this.roles = user.getRoles().stream()
                 .map(r -> r.getName())
                 .collect(Collectors.toSet());
-        this.authorities = roles.stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+        this.permissions = user.getRoles().stream()
+                .flatMap(r -> r.getPermissions().stream())
+                .map(p -> p.getCode())
                 .collect(Collectors.toSet());
+        this.authorities = Stream.concat(
+                roles.stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role)),
+                permissions.stream().map(SimpleGrantedAuthority::new)
+        ).collect(Collectors.toSet());
     }
 
     @Override
@@ -45,5 +52,9 @@ public class UserPrincipal implements UserDetails {
 
     public boolean hasRole(String role) {
         return roles.contains(role);
+    }
+
+    public boolean hasPermission(String permission) {
+        return permissions.contains(permission);
     }
 }

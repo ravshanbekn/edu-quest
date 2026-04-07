@@ -27,24 +27,24 @@ public class QuizController {
     private final ProgressService progressService;
 
     @PostMapping("/api/v1/lessons/{lessonId}/quizzes")
-    @PreAuthorize("hasAnyRole('TEACHER','ADMIN')")
+    @PreAuthorize("hasAuthority('course:manage_own')")
     public ResponseEntity<QuizResponse> create(
             @AuthenticationPrincipal UserPrincipal p,
             @PathVariable Long lessonId,
             @Valid @RequestBody CreateQuizRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(quizService.create(p.getId(), p.hasRole("ADMIN"), lessonId, request));
+                .body(quizService.create(p.getId(), p.hasPermission("course:manage_all"), lessonId, request));
     }
 
     @PostMapping("/api/v1/quizzes/{id}/attempt")
-    @PreAuthorize("hasRole('STUDENT')")
+    @PreAuthorize("hasAuthority('quiz:take')")
     public ResponseEntity<QuizResponse> startAttempt(@PathVariable Long id) {
         // Возвращает квиз (вопросы без правильных ответов)
         return ResponseEntity.ok(quizService.getQuiz(id));
     }
 
     @PostMapping("/api/v1/quizzes/{id}/attempt/{attemptId}/submit")
-    @PreAuthorize("hasRole('STUDENT')")
+    @PreAuthorize("hasAuthority('quiz:take')")
     public ResponseEntity<QuizAttempt> submitAttempt(
             @AuthenticationPrincipal UserPrincipal p,
             @PathVariable Long id,

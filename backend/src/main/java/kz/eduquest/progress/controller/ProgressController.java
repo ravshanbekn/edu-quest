@@ -1,8 +1,7 @@
 package kz.eduquest.progress.controller;
 
 import kz.eduquest.common.security.UserPrincipal;
-import kz.eduquest.progress.entity.ProgressStatus;
-import kz.eduquest.progress.entity.UserProgress;
+import kz.eduquest.progress.dto.UserProgressResponse;
 import kz.eduquest.progress.repository.UserProgressRepository;
 import kz.eduquest.progress.service.ProgressService;
 import lombok.RequiredArgsConstructor;
@@ -22,29 +21,27 @@ public class ProgressController {
 
     /** GET /api/v1/users/me/progress — общий прогресс */
     @GetMapping("/api/v1/users/me/progress")
-    public ResponseEntity<List<UserProgress>> myProgress(@AuthenticationPrincipal UserPrincipal p) {
-        return ResponseEntity.ok(progressRepository.findByUserId(p.getId()));
+    public ResponseEntity<List<UserProgressResponse>> myProgress(@AuthenticationPrincipal UserPrincipal p) {
+        return ResponseEntity.ok(progressRepository.findByUserId(p.getId()).stream()
+                .map(UserProgressResponse::from).toList());
     }
 
     /** GET /api/v1/courses/{id}/progress — прогресс по курсу */
     @GetMapping("/api/v1/courses/{id}/progress")
-    public ResponseEntity<List<UserProgress>> courseProgress(
+    public ResponseEntity<List<UserProgressResponse>> courseProgress(
             @AuthenticationPrincipal UserPrincipal p,
             @PathVariable Long id) {
-        // Фильтруем прогресс по урокам данного курса
-        List<UserProgress> all = progressRepository.findByUserId(p.getId());
-        List<UserProgress> forCourse = all.stream()
+        return ResponseEntity.ok(progressRepository.findByUserId(p.getId()).stream()
                 .filter(up -> up.getLesson().getBlock().getCourse().getId().equals(id))
-                .toList();
-        return ResponseEntity.ok(forCourse);
+                .map(UserProgressResponse::from).toList());
     }
 
     /** POST /api/v1/lessons/{id}/complete — отметить урок завершённым */
     @PostMapping("/api/v1/lessons/{id}/complete")
-    @PreAuthorize("hasRole('STUDENT')")
-    public ResponseEntity<UserProgress> completeLesson(
+    @PreAuthorize("hasAuthority('lesson:complete')")
+    public ResponseEntity<UserProgressResponse> completeLesson(
             @AuthenticationPrincipal UserPrincipal p,
             @PathVariable Long id) {
-        return ResponseEntity.ok(progressService.completeLesson(p.getId(), id));
+        return ResponseEntity.ok(UserProgressResponse.from(progressService.completeLesson(p.getId(), id)));
     }
 }

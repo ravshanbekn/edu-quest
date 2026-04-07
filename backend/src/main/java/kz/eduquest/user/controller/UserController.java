@@ -55,20 +55,20 @@ public class UserController {
     public ResponseEntity<ProfileResponse> getUserProfile(
             @PathVariable Long id,
             @AuthenticationPrincipal UserPrincipal principal) {
-        boolean isAdmin = principal.hasRole("ADMIN");
+        boolean isAdmin = principal.hasPermission("user:manage");
         return ResponseEntity.ok(userService.getProfile(id, principal.getId(), isAdmin));
     }
 
     /** GET /api/v1/users — список пользователей (ADMIN only) */
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('user:manage')")
     public ResponseEntity<Page<UserResponse>> getAllUsers(Pageable pageable) {
         return ResponseEntity.ok(userService.getAllUsers(pageable));
     }
 
     /** PUT /api/v1/users/{id}/roles — назначить роли (ADMIN only) */
     @PutMapping("/{id}/roles")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('role:manage')")
     public ResponseEntity<UserResponse> assignRoles(
             @PathVariable Long id,
             @RequestBody Set<String> roleNames) {

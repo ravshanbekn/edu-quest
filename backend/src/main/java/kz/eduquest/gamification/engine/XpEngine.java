@@ -56,8 +56,8 @@ public class XpEngine {
     @EventListener
     @Transactional
     public void onHintUsed(HintUsedEvent event) {
-        // Штраф за каждую подсказку — не idempotent, можно использовать несколько хинтов
-        awardXp(event.userId(), ActionType.HINT_USED, event.hintId(), XP_HINT_PENALTY);
+        // Штраф только при первом открытии подсказки
+        awardXpOnce(event.userId(), ActionType.HINT_USED, event.hintId(), XP_HINT_PENALTY);
     }
 
     @EventListener

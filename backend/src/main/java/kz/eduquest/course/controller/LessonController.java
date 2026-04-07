@@ -18,13 +18,13 @@ public class LessonController {
     private final LessonService lessonService;
 
     @PostMapping("/api/v1/blocks/{blockId}/lessons")
-    @PreAuthorize("hasAnyRole('TEACHER','ADMIN')")
+    @PreAuthorize("hasAuthority('course:manage_own')")
     public ResponseEntity<LessonResponse> create(
             @AuthenticationPrincipal UserPrincipal p,
             @PathVariable Long blockId,
             @Valid @RequestBody CreateLessonRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(lessonService.create(p.getId(), p.hasRole("ADMIN"), blockId, request));
+                .body(lessonService.create(p.getId(), p.hasPermission("course:manage_all"), blockId, request));
     }
 
     @GetMapping("/api/v1/lessons/{id}")
@@ -33,20 +33,20 @@ public class LessonController {
     }
 
     @PutMapping("/api/v1/lessons/{id}")
-    @PreAuthorize("hasAnyRole('TEACHER','ADMIN')")
+    @PreAuthorize("hasAuthority('course:manage_own')")
     public ResponseEntity<LessonResponse> update(
             @AuthenticationPrincipal UserPrincipal p,
             @PathVariable Long id,
             @Valid @RequestBody UpdateLessonRequest request) {
-        return ResponseEntity.ok(lessonService.update(p.getId(), p.hasRole("ADMIN"), id, request));
+        return ResponseEntity.ok(lessonService.update(p.getId(), p.hasPermission("course:manage_all"), id, request));
     }
 
     @DeleteMapping("/api/v1/lessons/{id}")
-    @PreAuthorize("hasAnyRole('TEACHER','ADMIN')")
+    @PreAuthorize("hasAuthority('course:manage_own')")
     public ResponseEntity<Void> delete(
             @AuthenticationPrincipal UserPrincipal p,
             @PathVariable Long id) {
-        lessonService.delete(p.getId(), p.hasRole("ADMIN"), id);
+        lessonService.delete(p.getId(), p.hasPermission("course:manage_all"), id);
         return ResponseEntity.noContent().build();
     }
 }

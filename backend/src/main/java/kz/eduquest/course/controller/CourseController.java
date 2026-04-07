@@ -22,7 +22,7 @@ public class CourseController {
     private final CourseService courseService;
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('TEACHER','ADMIN')")
+    @PreAuthorize("hasAuthority('course:create')")
     public ResponseEntity<CourseResponse> create(
             @AuthenticationPrincipal UserPrincipal p,
             @Valid @RequestBody CreateCourseRequest request) {
@@ -40,37 +40,37 @@ public class CourseController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('TEACHER','ADMIN')")
+    @PreAuthorize("hasAuthority('course:manage_own')")
     public ResponseEntity<CourseResponse> update(
             @AuthenticationPrincipal UserPrincipal p,
             @PathVariable Long id,
             @Valid @RequestBody UpdateCourseRequest request) {
-        return ResponseEntity.ok(courseService.update(p.getId(), p.hasRole("ADMIN"), id, request));
+        return ResponseEntity.ok(courseService.update(p.getId(), p.hasPermission("course:manage_all"), id, request));
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('TEACHER','ADMIN')")
+    @PreAuthorize("hasAuthority('course:manage_own')")
     public ResponseEntity<Void> delete(
             @AuthenticationPrincipal UserPrincipal p,
             @PathVariable Long id) {
-        courseService.delete(p.getId(), p.hasRole("ADMIN"), id);
+        courseService.delete(p.getId(), p.hasPermission("course:manage_all"), id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}/publish")
-    @PreAuthorize("hasAnyRole('TEACHER','ADMIN')")
+    @PreAuthorize("hasAuthority('course:manage_own')")
     public ResponseEntity<CourseResponse> publish(
             @AuthenticationPrincipal UserPrincipal p,
             @PathVariable Long id) {
-        return ResponseEntity.ok(courseService.publish(p.getId(), p.hasRole("ADMIN"), id));
+        return ResponseEntity.ok(courseService.publish(p.getId(), p.hasPermission("course:manage_all"), id));
     }
 
     @GetMapping("/{id}/students")
-    @PreAuthorize("hasAnyRole('TEACHER','ADMIN')")
+    @PreAuthorize("hasAuthority('progress:view_students')")
     public ResponseEntity<Page<UserResponse>> getStudents(
             @AuthenticationPrincipal UserPrincipal p,
             @PathVariable Long id,
             Pageable pageable) {
-        return ResponseEntity.ok(courseService.getStudents(p.getId(), p.hasRole("ADMIN"), id, pageable));
+        return ResponseEntity.ok(courseService.getStudents(p.getId(), p.hasPermission("course:manage_all"), id, pageable));
     }
 }

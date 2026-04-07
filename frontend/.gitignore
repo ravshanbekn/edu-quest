@@ -1,0 +1,20 @@
+# dependencies
+node_modules/
+
+# build
+dist/
+dist-ssr/
+
+# env
+.env
+.env.local
+.env.*.local
+
+# editor
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# misc
+*.local
+*.tsbuildinfo

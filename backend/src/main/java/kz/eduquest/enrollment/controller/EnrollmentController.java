@@ -20,7 +20,7 @@ public class EnrollmentController {
 
     /** Самозапись студента */
     @PostMapping("/api/v1/courses/{id}/enroll")
-    @PreAuthorize("hasRole('STUDENT')")
+    @PreAuthorize("hasAuthority('enrollment:self')")
     public ResponseEntity<EnrollmentResponse> selfEnroll(
             @AuthenticationPrincipal UserPrincipal p,
             @PathVariable Long id) {
@@ -30,23 +30,23 @@ public class EnrollmentController {
 
     /** Учитель записывает студента */
     @PostMapping("/api/v1/courses/{id}/enroll/{userId}")
-    @PreAuthorize("hasAnyRole('TEACHER','ADMIN')")
+    @PreAuthorize("hasAuthority('enrollment:manage')")
     public ResponseEntity<EnrollmentResponse> enrollByTeacher(
             @AuthenticationPrincipal UserPrincipal p,
             @PathVariable Long id,
             @PathVariable Long userId) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(enrollmentService.enrollByTeacher(p.getId(), p.hasRole("ADMIN"), id, userId));
+                .body(enrollmentService.enrollByTeacher(p.getId(), p.hasPermission("course:manage_all"), id, userId));
     }
 
     /** Учитель отписывает студента */
     @DeleteMapping("/api/v1/courses/{id}/enroll/{userId}")
-    @PreAuthorize("hasAnyRole('TEACHER','ADMIN')")
+    @PreAuthorize("hasAuthority('enrollment:manage')")
     public ResponseEntity<Void> unenroll(
             @AuthenticationPrincipal UserPrincipal p,
             @PathVariable Long id,
             @PathVariable Long userId) {
-        enrollmentService.unenroll(p.getId(), p.hasRole("ADMIN"), id, userId);
+        enrollmentService.unenroll(p.getId(), p.hasPermission("course:manage_all"), id, userId);
         return ResponseEntity.noContent().build();
     }
 
