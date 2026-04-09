@@ -1,3 +1,9 @@
+# markdown & claude
+*.md
+!README.md
+.claude
+.claude/
+
 # dependencies
 node_modules/
 

@@ -1,4 +1,9 @@
-HELP.md
+### Markdown & Claude ###
+*.md
+!README.md
+.claude
+.claude/
+
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar

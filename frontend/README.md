@@ -1,71 +1,74 @@
-# EduQuest Frontend
+# EduQuest — Frontend
 
-Фронтенд образовательной платформы EduQuest — React SPA.
+React SPA for the EduQuest gamified learning platform. Students browse courses, earn XP and badges, compete on a leaderboard. Teachers manage courses and content.
 
-## Требования
+## Tech Stack
 
+| | |
+|---|---|
+| Framework | React 19 |
+| Language | TypeScript 5 |
+| Build | Vite 6 |
+| Styles | Tailwind CSS 4 |
+| Routing | React Router 7 |
+| Server state | TanStack Query 5 |
+| Client state | Zustand 5 |
+| HTTP | Axios 1 |
+| Forms | React Hook Form + Zod |
+| Icons | Lucide React |
+| Notifications | Sonner |
 
-- **Node.js** >= 18 (рекомендуется 20+)
-- **npm** >= 9
-- Backend API запущен на `http://localhost:8090`
+## Getting Started
 
-## Быстрый старт
+### Prerequisites
+
+Backend must be running on `http://localhost:8090`. See the [backend README](../backend/README.md).
+
+### Install dependencies
 
 ```bash
-# 1. Установить зависимости (если ещё не установлены)
+npm install
+```
 
+### Run development server
 
-# 2. Запустить dev-сервер
+```bash
 npm run dev
 ```
 
-Приложение откроется на **http://localhost:3000**.
+App is available at `http://localhost:3000`. All `/api` requests are proxied to the backend.
 
-API-запросы к `/api/*` автоматически проксируются на `http://localhost:8090`.
+## Commands
 
-## Команды
+```bash
+npm run dev      # Start dev server (port 3000)
+npm run build    # Production build
+npm run lint     # Run ESLint
+```
 
-| Команда         | Описание                                    |
-|-----------------|---------------------------------------------|
-| `npm run dev`   | Запуск dev-сервера (http://localhost:3000)   |
-| `npm run build` | Сборка для продакшена в папку `dist/`        |
-| `npm run preview` | Просмотр собранной версии                 |
-| `npm run lint`  | Проверка кода линтером                      |
-
-## Технологии
-
-- React 19 + TypeScript 5
-- Vite 6 (сборка и dev-сервер)
-- Tailwind CSS 4 (стили)
-- React Router 7 (навигация)
-- TanStack Query 5 (запросы к API, кеширование)
-- Zustand 5 (глобальный стейт)
-- Axios (HTTP-клиент с JWT interceptors)
-- React Hook Form + Zod (формы и валидация)
-- shadcn/ui (UI-компоненты)
-- Lucide React (иконки)
-- Sonner (тосты/уведомления)
-
-## Структура проекта
+## Project Structure
 
 ```
 src/
-├── api/          # Axios клиент и функции для каждого API-модуля
-├── components/
-│   ├── layout/   # AppLayout, Header, Sidebar, Footer
-│   ├── ui/       # shadcn/ui компоненты (Button, Input, Card...)
-│   └── shared/   # Переиспользуемые бизнес-компоненты
-├── features/     # Страницы, сгруппированные по фичам
-│   ├── auth/     # Логин, регистрация
-│   ├── dashboard/
-│   ├── courses/  # Каталог, создание, редактирование курсов
-│   ├── lesson/   # Прохождение уроков
-│   ├── profile/  # Профиль пользователя
-│   ├── gamification/ # Лидерборд, бейджи, XP
-│   └── admin/    # Админ-панель
-├── hooks/        # Глобальные React-хуки
-├── stores/       # Zustand stores (auth, ui)
-├── types/        # TypeScript типы
-├── lib/          # Утилиты (cn(), константы)
-└── routes/       # Маршруты и guards
+├── api/          # Axios API functions (one file per resource)
+├── components/   # layout/ and shared/ reusable components
+├── features/     # Pages and domain logic (auth, courses, lesson, profile, gamification, admin)
+├── hooks/        # Global hooks (useCurrentUser, usePagination)
+├── routes/       # Route definitions, ProtectedRoute, RoleGuard
+├── stores/       # Zustand stores (auth, ui, theme)
+├── types/        # TypeScript interfaces mirroring backend DTOs
+└── lib/          # Utilities (cn, constants)
 ```
+
+## Authentication
+
+JWT-based auth. Tokens are stored via Zustand persist in `localStorage`. The Axios client automatically refreshes the access token on 401 responses.
+
+## Roles
+
+| Role | Access |
+|------|--------|
+| `GUEST` | Course catalog, leaderboard |
+| `STUDENT` | All above + enroll in courses, complete lessons, earn XP |
+| `TEACHER` | All above + create and manage own courses |
+| `ADMIN` | Full access + user management |
