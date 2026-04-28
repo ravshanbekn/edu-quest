@@ -2,6 +2,7 @@ package kz.eduquest.user.service;
 
 import kz.eduquest.storage.StorageService;
 import kz.eduquest.user.dto.ProfileResponse;
+import java.util.Optional;
 import kz.eduquest.user.dto.UpdateProfileRequest;
 import kz.eduquest.user.dto.UserResponse;
 import kz.eduquest.user.entity.Role;
@@ -30,7 +31,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserProfileRepository profileRepository;
     private final RoleRepository roleRepository;
-    private final StorageService storageService;
+    private final Optional<StorageService> storageService;
 
     public UserResponse getUser(Long userId) {
         return toUserResponse(findUserOrThrow(userId));
@@ -90,12 +91,14 @@ public class UserService {
                     return profileRepository.save(UserProfile.builder().user(user).build());
                 });
 
-        // Удалить старый аватар если есть
+        StorageService storage = storageService
+                .orElseThrow(() -> new IllegalStateException("File storage is not configured"));
+
         if (profile.getAvatarUrl() != null) {
-            storageService.delete(profile.getAvatarUrl());
+            storage.delete(profile.getAvatarUrl());
         }
 
-        String objectKey = storageService.upload("avatars", file);
+        String objectKey = storage.upload("avatars", file);
         profile.setAvatarUrl(objectKey);
         profileRepository.save(profile);
 
