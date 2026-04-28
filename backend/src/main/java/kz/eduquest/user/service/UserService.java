@@ -1,8 +1,6 @@
 package kz.eduquest.user.service;
 
-import kz.eduquest.storage.StorageService;
 import kz.eduquest.user.dto.ProfileResponse;
-import java.util.Optional;
 import kz.eduquest.user.dto.UpdateProfileRequest;
 import kz.eduquest.user.dto.UserResponse;
 import kz.eduquest.user.entity.Role;
@@ -16,7 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -26,12 +23,9 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class UserService {
 
-    private static final Set<String> ALLOWED_IMAGE_TYPES = Set.of("image/jpeg", "image/png", "image/webp");
-
     private final UserRepository userRepository;
     private final UserProfileRepository profileRepository;
     private final RoleRepository roleRepository;
-    private final Optional<StorageService> storageService;
 
     public UserResponse getUser(Long userId) {
         return toUserResponse(findUserOrThrow(userId));
@@ -76,34 +70,7 @@ public class UserService {
         return userRepository.findAllActive(pageable).map(this::toUserResponse);
     }
 
-    @Transactional
-    public ProfileResponse uploadAvatar(Long userId, MultipartFile file) {
-        if (file.isEmpty()) {
-            throw new IllegalArgumentException("File is empty");
-        }
-        if (!ALLOWED_IMAGE_TYPES.contains(file.getContentType())) {
-            throw new IllegalArgumentException("Only JPEG, PNG and WebP images are allowed");
-        }
-
-        UserProfile profile = profileRepository.findByUserId(userId)
-                .orElseGet(() -> {
-                    User user = findUserOrThrow(userId);
-                    return profileRepository.save(UserProfile.builder().user(user).build());
-                });
-
-        StorageService storage = storageService
-                .orElseThrow(() -> new IllegalStateException("File storage is not configured"));
-
-        if (profile.getAvatarUrl() != null) {
-            storage.delete(profile.getAvatarUrl());
-        }
-
-        String objectKey = storage.upload("avatars", file);
-        profile.setAvatarUrl(objectKey);
-        profileRepository.save(profile);
-
-        return ProfileResponse.full(profile);
-    }
+    // uploadAvatar временно отключён (MinIO не настроен)
 
     @Transactional
     public UserResponse assignRoles(Long userId, Set<String> roleNames) {

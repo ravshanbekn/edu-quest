@@ -43,7 +43,7 @@ app:
     access-expiration-ms: 900000       # 15 минут
     refresh-expiration-ms: 604800000   # 7 дней
   minio:
-    url: ${MINIO_URL:http://localhost:9000}
+    url: ${MINIO_URL:}
     access-key: ${MINIO_ACCESS_KEY:minioadmin}
     secret-key: ${MINIO_SECRET_KEY:minioadmin}
     bucket: ${MINIO_BUCKET:eduquest}
