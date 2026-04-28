@@ -34,6 +34,12 @@ public class UserController {
         return ResponseEntity.ok(userService.getUser(principal.getId()));
     }
 
+    /** GET /api/v1/users/me/profile — мой профиль */
+    @GetMapping("/me/profile")
+    public ResponseEntity<ProfileResponse> getMyProfile(@AuthenticationPrincipal UserPrincipal principal) {
+        return ResponseEntity.ok(userService.getProfile(principal.getId(), principal.getId(), false));
+    }
+
     /** PUT /api/v1/users/me/profile — обновить профиль */
     @PutMapping("/me/profile")
     public ResponseEntity<ProfileResponse> updateMyProfile(

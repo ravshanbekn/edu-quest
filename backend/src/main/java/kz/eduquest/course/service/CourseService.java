@@ -40,7 +40,9 @@ public class CourseService {
     }
 
     public CourseDetailResponse getCourse(Long courseId) {
-        return CourseDetailResponse.from(findCourseOrThrow(courseId));
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new IllegalArgumentException("Course not found: " + courseId));
+        return CourseDetailResponse.from(course);
     }
 
     @Transactional

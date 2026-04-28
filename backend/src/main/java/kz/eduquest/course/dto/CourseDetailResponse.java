@@ -28,13 +28,14 @@ public record CourseDetailResponse(
 
     public record BlockDetail(
             Long id,
+            Long courseId,
             String title,
             int sortOrder,
             List<LessonBrief> lessons
     ) {
         static BlockDetail from(Block b) {
             return new BlockDetail(
-                    b.getId(), b.getTitle(), b.getSortOrder(),
+                    b.getId(), b.getCourse().getId(), b.getTitle(), b.getSortOrder(),
                     b.getLessons().stream().map(LessonBrief::from).toList()
             );
         }
@@ -42,6 +43,7 @@ public record CourseDetailResponse(
 
     public record LessonBrief(
             Long id,
+            Long blockId,
             String title,
             LessonType type,
             int sortOrder,
@@ -49,7 +51,7 @@ public record CourseDetailResponse(
     ) {
         static LessonBrief from(Lesson l) {
             return new LessonBrief(
-                    l.getId(), l.getTitle(), l.getType(),
+                    l.getId(), l.getBlock().getId(), l.getTitle(), l.getType(),
                     l.getSortOrder(), l.getXpReward()
             );
         }
