@@ -1,6 +1,6 @@
-export type LessonType = "VIDEO" | "TASK" | "QUIZ" | "MIXED";
+export type LessonType = "VIDEO" | "TASK" | "QUIZ" | "MIXED" | "THEORY" | "PRACTICE";
 export type TaskType = "TEXT" | "CODE" | "FILE_UPLOAD";
-export type ContentType = "TEXT" | "VIDEO" | "CODE_BLOCK";
+export type ContentType = "TEXT" | "VIDEO" | "CODE_BLOCK" | "IMAGE";
 export type ProgressStatus = "NOT_STARTED" | "IN_PROGRESS" | "COMPLETED";
 export type EnrollmentStatus = "ACTIVE" | "COMPLETED" | "DROPPED";
 export type ActionType =

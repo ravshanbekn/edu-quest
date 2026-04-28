@@ -14,6 +14,8 @@ const LESSON_TYPES: { value: LessonType; label: string }[] = [
   { value: "TASK", label: "Задание" },
   { value: "QUIZ", label: "Квиз" },
   { value: "MIXED", label: "Смешанный" },
+  { value: "THEORY", label: "Теория" },
+  { value: "PRACTICE", label: "Практика" },
 ];
 
 export function LessonForm({ initialTitle = "", initialType = "MIXED", onSubmit, onCancel, loading }: LessonFormProps) {

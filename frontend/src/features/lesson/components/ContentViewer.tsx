@@ -1,8 +1,25 @@
-import { FileText, Video, Code } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { Video, Code, Image } from "lucide-react";
 import type { ContentResponse } from "@/types/lesson.types";
 
 interface ContentViewerProps {
   contents: ContentResponse[];
+}
+
+function toEmbedUrl(url: string): string {
+  try {
+    const u = new URL(url);
+    if (u.hostname.includes("youtube.com") && u.searchParams.get("v")) {
+      return `https://www.youtube.com/embed/${u.searchParams.get("v")}`;
+    }
+    if (u.hostname === "youtu.be") {
+      return `https://www.youtube.com/embed${u.pathname}`;
+    }
+  } catch {
+    // not a valid URL, return as-is
+  }
+  return url;
 }
 
 export function ContentViewer({ contents }: ContentViewerProps) {
@@ -15,11 +32,8 @@ export function ContentViewer({ contents }: ContentViewerProps) {
       {sorted.map((content) => (
         <div key={content.id}>
           {content.contentType === "TEXT" && content.body && (
-            <div className="prose prose-sm max-w-none">
-              <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
-                <FileText className="h-3.5 w-3.5" /> Текст
-              </div>
-              <div className="whitespace-pre-wrap text-sm leading-relaxed">{content.body}</div>
+            <div className="prose prose-sm max-w-none dark:prose-invert">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>{content.body}</ReactMarkdown>
             </div>
           )}
 
@@ -30,7 +44,7 @@ export function ContentViewer({ contents }: ContentViewerProps) {
               </div>
               <div className="aspect-video rounded-lg overflow-hidden bg-black">
                 <iframe
-                  src={content.videoUrl}
+                  src={toEmbedUrl(content.videoUrl)}
                   title="Видео урока"
                   className="h-full w-full"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -48,6 +62,19 @@ export function ContentViewer({ contents }: ContentViewerProps) {
               <pre className="bg-muted rounded-lg p-4 overflow-x-auto text-sm">
                 <code>{content.body}</code>
               </pre>
+            </div>
+          )}
+
+          {content.contentType === "IMAGE" && content.videoUrl && (
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <Image className="h-3.5 w-3.5" /> Изображение
+              </div>
+              <img
+                src={content.videoUrl}
+                alt={content.body ?? ""}
+                className="rounded-lg max-w-full"
+              />
             </div>
           )}
         </div>

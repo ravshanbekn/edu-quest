@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { Plus, Pencil, Trash2, Video, FileText, HelpCircle, Layers } from "lucide-react";
+import { Plus, Pencil, Trash2, Video, FileText, HelpCircle, Layers, BookOpen, Dumbbell } from "lucide-react";
 import { toast } from "sonner";
 import { createLesson, deleteLesson, updateLesson } from "@/api/lessons.api";
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
@@ -21,6 +21,8 @@ const typeIcons: Record<LessonType, React.ComponentType<{ className?: string }>>
   TASK: FileText,
   QUIZ: HelpCircle,
   MIXED: Layers,
+  THEORY: BookOpen,
+  PRACTICE: Dumbbell,
 };
 
 const typeLabels: Record<LessonType, string> = {
@@ -28,6 +30,8 @@ const typeLabels: Record<LessonType, string> = {
   TASK: "Задание",
   QUIZ: "Квиз",
   MIXED: "Смешанный",
+  THEORY: "Теория",
+  PRACTICE: "Практика",
 };
 
 export function LessonList({ blockId, lessons, courseId, canEdit }: LessonListProps) {

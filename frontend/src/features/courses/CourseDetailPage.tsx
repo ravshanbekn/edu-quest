@@ -8,31 +8,8 @@ import { LoadingSpinner } from "@/components/shared/LoadingSpinner";
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import { BlockList } from "./components/BlockList";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
+import type { CourseDetailResponse } from "@/types/course.types";
 import { useState } from "react";
-
-interface CourseDetailWithBlocks {
-  id: string;
-  teacherId: string;
-  title: string;
-  description: string | null;
-  coverUrl: string | null;
-  published: boolean;
-  createdAt: string;
-  blocks?: Array<{
-    id: string;
-    courseId: string;
-    title: string;
-    sortOrder: number;
-    lessons?: Array<{
-      id: string;
-      blockId: string;
-      title: string;
-      type: "VIDEO" | "TASK" | "QUIZ" | "MIXED";
-      sortOrder: number;
-      xpReward: number;
-    }>;
-  }>;
-}
 
 export function CourseDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -41,7 +18,7 @@ export function CourseDetailPage() {
   const { data: user } = useCurrentUser();
   const [showDelete, setShowDelete] = useState(false);
 
-  const { data: course, isLoading } = useQuery<CourseDetailWithBlocks>({
+  const { data: course, isLoading } = useQuery<CourseDetailResponse>({
     queryKey: ["course", id],
     queryFn: () => getCourse(id!),
     enabled: !!id,
