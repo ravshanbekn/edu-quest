@@ -1,0 +1,8 @@
+[build]
+builder = "dockerfile"
+dockerfilePath = "backend/Dockerfile"
+buildContext = "backend"
+
+[deploy]
+startCommand = "java -jar app.jar"
+restartPolicyType = "on_failure"
