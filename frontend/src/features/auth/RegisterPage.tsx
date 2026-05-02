@@ -7,13 +7,13 @@ import { AuthLayout } from "./components/AuthLayout";
 
 const registerSchema = z
   .object({
-    email: z.string().email("Введите корректный email"),
-    displayName: z.string().max(100, "Максимум 100 символов").optional(),
-    password: z.string().min(6, "Минимум 6 символов").max(128, "Максимум 128 символов"),
+    email: z.string().email("Enter a valid email"),
+    displayName: z.string().max(100, "Maximum 100 characters").optional(),
+    password: z.string().min(6, "Minimum 6 characters").max(128, "Maximum 128 characters"),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Пароли не совпадают",
+    message: "Passwords do not match",
     path: ["confirmPassword"],
   });
 
@@ -36,8 +36,8 @@ export function RegisterPage() {
     <AuthLayout>
       <div className="space-y-6" style={{ animation: "fadeIn 0.35s ease" }}>
         <div className="space-y-1">
-          <h1 className="text-2xl font-bold">Создать аккаунт</h1>
-          <p className="text-sm text-muted-foreground">Начните свой путь в EduQuest</p>
+          <h1 className="text-2xl font-bold">Create account</h1>
+          <p className="text-sm text-muted-foreground">Start your journey in EduQuest</p>
         </div>
 
         <form
@@ -64,13 +64,13 @@ export function RegisterPage() {
 
           <div className="space-y-1.5">
             <label htmlFor="displayName" className="text-sm font-medium">
-              Имя{" "}
-              <span className="text-muted-foreground font-normal">(необязательно)</span>
+              Name{" "}
+              <span className="text-muted-foreground font-normal">(optional)</span>
             </label>
             <input
               id="displayName"
               type="text"
-              placeholder="Ваше имя"
+              placeholder="Your name"
               className={inputClass}
               {...register("displayName")}
             />
@@ -81,12 +81,12 @@ export function RegisterPage() {
 
           <div className="space-y-1.5">
             <label htmlFor="password" className="text-sm font-medium">
-              Пароль
+              Password
             </label>
             <input
               id="password"
               type="password"
-              placeholder="Минимум 6 символов"
+              placeholder="Minimum 6 characters"
               className={inputClass}
               {...register("password")}
             />
@@ -97,12 +97,12 @@ export function RegisterPage() {
 
           <div className="space-y-1.5">
             <label htmlFor="confirmPassword" className="text-sm font-medium">
-              Подтвердите пароль
+              Confirm password
             </label>
             <input
               id="confirmPassword"
               type="password"
-              placeholder="Повторите пароль"
+              placeholder="Repeat password"
               className={inputClass}
               {...register("confirmPassword")}
             />
@@ -116,14 +116,14 @@ export function RegisterPage() {
             disabled={isPending}
             className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors mt-2"
           >
-            {isPending ? "Создаём аккаунт..." : "Зарегистрироваться"}
+            {isPending ? "Creating account..." : "Sign up"}
           </button>
         </form>
 
         <p className="text-center text-sm text-muted-foreground">
-          Уже есть аккаунт?{" "}
+          Already have an account?{" "}
           <Link to="/login" className="text-primary font-medium hover:underline">
-            Войти
+            Sign in
           </Link>
         </p>
       </div>

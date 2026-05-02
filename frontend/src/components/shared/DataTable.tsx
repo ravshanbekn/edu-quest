@@ -23,7 +23,7 @@ export function DataTable<T>({
   if (isLoading) {
     return (
       <div className="border rounded-lg p-8 text-center text-muted-foreground">
-        Загрузка...
+        Loading...
       </div>
     );
   }
@@ -31,7 +31,7 @@ export function DataTable<T>({
   if (!data || data.empty) {
     return (
       <div className="border rounded-lg p-8 text-center text-muted-foreground">
-        Нет данных
+        No data
       </div>
     );
   }
@@ -66,7 +66,7 @@ export function DataTable<T>({
       {data.totalPages > 1 && (
         <div className="flex items-center justify-between text-sm">
           <span className="text-muted-foreground">
-            Страница {data.number + 1} из {data.totalPages} ({data.totalElements} записей)
+            Page {data.number + 1} of {data.totalPages} ({data.totalElements} records)
           </span>
           <div className="flex gap-1">
             <button

@@ -11,7 +11,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { usePageTitle } from "@/hooks/usePageTitle";
 
 export function CatalogPage() {
-  usePageTitle("Каталог курсов");
+  usePageTitle("Course catalog");
   const { page, size, setPage } = usePagination();
   const { data: user } = useCurrentUser();
 
@@ -25,13 +25,13 @@ export function CatalogPage() {
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Каталог курсов</h1>
+        <h1 className="text-2xl font-bold">Course catalog</h1>
         {canCreate && (
           <Link
             to="/courses/create"
             className="flex items-center gap-2 px-4 py-2 text-sm rounded-md bg-primary text-white hover:bg-primary/90"
           >
-            <Plus className="h-4 w-4" /> Создать курс
+            <Plus className="h-4 w-4" /> Create course
           </Link>
         )}
       </div>
@@ -40,8 +40,8 @@ export function CatalogPage() {
         <LoadingSpinner size="lg" className="py-20" />
       ) : !data || data.empty ? (
         <EmptyState
-          title="Курсов пока нет"
-          description="Скоро здесь появятся курсы"
+          title="No courses yet"
+          description="Courses will appear here soon"
         />
       ) : (
         <>
@@ -54,7 +54,7 @@ export function CatalogPage() {
           {data.totalPages > 1 && (
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">
-                Страница {data.number + 1} из {data.totalPages}
+                Page {data.number + 1} of {data.totalPages}
               </span>
               <div className="flex gap-1">
                 <button

@@ -15,7 +15,7 @@ export function BlockForm({ initialTitle = "", onSubmit, onCancel, loading }: Bl
       <input
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        placeholder="Название блока"
+        placeholder="Block title"
         className="flex-1 rounded-md border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
         autoFocus
       />
@@ -24,13 +24,13 @@ export function BlockForm({ initialTitle = "", onSubmit, onCancel, loading }: Bl
         disabled={!title.trim() || loading}
         className="px-3 py-2 text-sm rounded-md bg-primary text-white hover:bg-primary/90 disabled:opacity-50"
       >
-        {loading ? "..." : "Сохранить"}
+        {loading ? "..." : "Save"}
       </button>
       <button
         onClick={onCancel}
         className="px-3 py-2 text-sm rounded-md border hover:bg-muted"
       >
-        Отмена
+        Cancel
       </button>
     </div>
   );

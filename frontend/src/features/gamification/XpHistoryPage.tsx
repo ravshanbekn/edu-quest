@@ -9,17 +9,17 @@ import type { ActionType } from "@/types/common.types";
 import { usePageTitle } from "@/hooks/usePageTitle";
 
 const actionLabels: Record<ActionType, string> = {
-  LESSON_COMPLETE: "Урок пройден",
-  TASK_SOLVED: "Задание решено",
-  QUIZ_PASSED: "Квиз пройден",
-  HINT_USED: "Подсказка",
-  BLOCK_COMPLETE: "Блок завершён",
-  COURSE_COMPLETE: "Курс завершён",
-  DAILY_LOGIN: "Ежедневный вход",
+  LESSON_COMPLETE: "Lesson completed",
+  TASK_SOLVED: "Task solved",
+  QUIZ_PASSED: "Quiz passed",
+  HINT_USED: "Hint used",
+  BLOCK_COMPLETE: "Block completed",
+  COURSE_COMPLETE: "Course completed",
+  DAILY_LOGIN: "Daily login",
 };
 
 export function XpHistoryPage() {
-  usePageTitle("История XP");
+  usePageTitle("XP History");
   const { page, size, setPage } = usePagination();
 
   const { data, isLoading } = useQuery({
@@ -31,15 +31,15 @@ export function XpHistoryPage() {
     <div className="space-y-6 max-w-3xl mx-auto">
       <div className="flex items-center gap-2">
         <History className="h-6 w-6 text-primary" />
-        <h1 className="text-2xl font-bold">История XP</h1>
+        <h1 className="text-2xl font-bold">XP History</h1>
       </div>
 
       {isLoading ? (
         <LoadingSpinner size="lg" className="py-20" />
       ) : !data || data.empty ? (
         <EmptyState
-          title="История пуста"
-          description="Начните проходить курсы, чтобы зарабатывать XP"
+          title="No history yet"
+          description="Start completing courses to earn XP"
           icon={History}
         />
       ) : (
@@ -57,7 +57,7 @@ export function XpHistoryPage() {
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium">{actionLabels[entry.actionType] || entry.actionType}</p>
                     <p className="text-xs text-muted-foreground">
-                      {new Date(entry.createdAt).toLocaleString("ru-RU")}
+                      {new Date(entry.createdAt).toLocaleString("en-US")}
                     </p>
                   </div>
                   <span className={`text-sm font-semibold ${positive ? "text-green-600" : "text-red-500"}`}>
@@ -71,7 +71,7 @@ export function XpHistoryPage() {
           {data.totalPages > 1 && (
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">
-                Страница {data.number + 1} из {data.totalPages}
+                Page {data.number + 1} of {data.totalPages}
               </span>
               <div className="flex gap-1">
                 <button

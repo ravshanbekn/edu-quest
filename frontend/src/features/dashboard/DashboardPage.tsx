@@ -12,7 +12,7 @@ import { usePageTitle } from "@/hooks/usePageTitle";
 import { ENROLLMENT_STATUS_LABELS } from "@/lib/constants";
 
 export function DashboardPage() {
-  usePageTitle("Главная");
+  usePageTitle("Home");
   const { data: user } = useCurrentUser();
   const { data: profile } = useQuery({
     queryKey: ["myProfile"],
@@ -28,15 +28,15 @@ export function DashboardPage() {
     queryFn: () => getMyEnrollments({ page: 0, size: 5 }),
   });
 
-  const displayName = profile?.displayName ?? user?.email ?? "Студент";
+  const displayName = profile?.displayName ?? user?.email ?? "Student";
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold">
-          Привет, {displayName}!
+          Hello, {displayName}!
         </h1>
-        <p className="text-muted-foreground text-sm mt-1">Ваш прогресс обучения</p>
+        <p className="text-muted-foreground text-sm mt-1">Your learning progress</p>
       </div>
 
       {/* XP card */}
@@ -44,9 +44,9 @@ export function DashboardPage() {
         <div className="rounded-lg border p-4 space-y-3">
           <div className="flex items-center gap-3">
             <Trophy className="h-5 w-5 text-xp" />
-            <span className="font-semibold">Ваш опыт</span>
+            <span className="font-semibold">Your XP</span>
             <span className="ml-auto text-sm text-muted-foreground font-medium">
-              {xp.totalXp.toLocaleString("ru")} XP
+              {xp.totalXp.toLocaleString("en")} XP
             </span>
           </div>
           <XpBar
@@ -64,27 +64,27 @@ export function DashboardPage() {
           className="flex items-center gap-3 p-4 rounded-lg border hover:bg-muted/50 transition-colors"
         >
           <BookOpen className="h-5 w-5 text-primary" />
-          <span className="text-sm font-medium">Каталог курсов</span>
+          <span className="text-sm font-medium">Course catalog</span>
         </Link>
         <Link
           to="/leaderboard"
           className="flex items-center gap-3 p-4 rounded-lg border hover:bg-muted/50 transition-colors"
         >
           <Trophy className="h-5 w-5 text-xp" />
-          <span className="text-sm font-medium">Лидерборд</span>
+          <span className="text-sm font-medium">Leaderboard</span>
         </Link>
         <Link
           to="/badges"
           className="flex items-center gap-3 p-4 rounded-lg border hover:bg-muted/50 transition-colors"
         >
           <Award className="h-5 w-5 text-level" />
-          <span className="text-sm font-medium">Бейджи</span>
+          <span className="text-sm font-medium">Badges</span>
         </Link>
       </div>
 
       {/* Recent enrollments */}
       <div className="space-y-4">
-        <h2 className="text-lg font-semibold">Мои курсы</h2>
+        <h2 className="text-lg font-semibold">My courses</h2>
         {isLoading ? (
           <LoadingSpinner />
         ) : enrollments && enrollments.content.length > 0 ? (
@@ -97,23 +97,23 @@ export function DashboardPage() {
               >
                 <div className="font-medium text-foreground">{e.courseTitle}</div>
                 <div className="text-xs mt-1">
-                  Статус:{" "}
+                  Status:{" "}
                   <span className="font-medium">
                     {ENROLLMENT_STATUS_LABELS[e.status] ?? e.status}
                   </span>{" "}
-                  &middot; Записан:{" "}
-                  {new Date(e.enrolledAt).toLocaleDateString("ru")}
+                  &middot; Enrolled:{" "}
+                  {new Date(e.enrolledAt).toLocaleDateString("en")}
                 </div>
               </Link>
             ))}
             <Link to="/my-courses" className="text-primary text-xs hover:underline">
-              Все курсы &rarr;
+              All courses &rarr;
             </Link>
           </div>
         ) : (
           <EmptyState
-            title="Вы пока не записаны на курсы"
-            description="Откройте каталог и выберите курс для начала обучения"
+            title="You are not enrolled in any courses"
+            description="Open the catalog and choose a course to start learning"
           />
         )}
       </div>

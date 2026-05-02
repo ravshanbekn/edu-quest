@@ -38,10 +38,10 @@ export function EditCoursePage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["course", id] });
       queryClient.invalidateQueries({ queryKey: ["courses"] });
-      toast.success("Курс обновлён");
+      toast.success("Course updated");
       navigate(`/courses/${id}`);
     },
-    onError: () => toast.error("Ошибка обновления курса"),
+    onError: () => toast.error("Error updating course"),
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -51,15 +51,15 @@ export function EditCoursePage() {
   };
 
   if (isLoading) return <LoadingSpinner size="lg" className="py-20" />;
-  if (!course) return <p className="text-muted-foreground py-10 text-center">Курс не найден</p>;
+  if (!course) return <p className="text-muted-foreground py-10 text-center">Course not found</p>;
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold">Редактирование курса</h1>
+      <h1 className="text-2xl font-bold">Edit course</h1>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
-          <label className="text-sm font-medium">Название *</label>
+          <label className="text-sm font-medium">Title *</label>
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -69,7 +69,7 @@ export function EditCoursePage() {
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium">Описание</label>
+          <label className="text-sm font-medium">Description</label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -79,7 +79,7 @@ export function EditCoursePage() {
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium">URL обложки</label>
+          <label className="text-sm font-medium">Cover URL</label>
           <input
             value={coverUrl}
             onChange={(e) => setCoverUrl(e.target.value)}
@@ -94,14 +94,14 @@ export function EditCoursePage() {
             disabled={!title.trim() || mutation.isPending}
             className="px-4 py-2 text-sm rounded-md bg-primary text-white hover:bg-primary/90 disabled:opacity-50"
           >
-            {mutation.isPending ? "Сохранение..." : "Сохранить"}
+            {mutation.isPending ? "Saving..." : "Save"}
           </button>
           <button
             type="button"
             onClick={() => navigate(`/courses/${id}`)}
             className="px-4 py-2 text-sm rounded-md border hover:bg-muted"
           >
-            Отмена
+            Cancel
           </button>
         </div>
       </form>

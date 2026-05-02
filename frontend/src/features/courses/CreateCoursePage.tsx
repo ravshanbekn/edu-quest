@@ -12,10 +12,10 @@ export function CreateCoursePage() {
   const mutation = useMutation({
     mutationFn: createCourse,
     onSuccess: (course) => {
-      toast.success("Курс создан");
+      toast.success("Course created");
       navigate(`/courses/${course.id}`);
     },
-    onError: () => toast.error("Ошибка создания курса"),
+    onError: () => toast.error("Error creating course"),
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -26,26 +26,26 @@ export function CreateCoursePage() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold">Создание курса</h1>
+      <h1 className="text-2xl font-bold">Create course</h1>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
-          <label className="text-sm font-medium">Название *</label>
+          <label className="text-sm font-medium">Title *</label>
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Введите название курса"
+            placeholder="Enter course title"
             className="w-full rounded-md border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
             required
           />
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium">Описание</label>
+          <label className="text-sm font-medium">Description</label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Описание курса (необязательно)"
+            placeholder="Course description (optional)"
             rows={4}
             className="w-full rounded-md border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary resize-none"
           />
@@ -57,14 +57,14 @@ export function CreateCoursePage() {
             disabled={!title.trim() || mutation.isPending}
             className="px-4 py-2 text-sm rounded-md bg-primary text-white hover:bg-primary/90 disabled:opacity-50"
           >
-            {mutation.isPending ? "Создание..." : "Создать курс"}
+            {mutation.isPending ? "Creating..." : "Create course"}
           </button>
           <button
             type="button"
             onClick={() => navigate(-1)}
             className="px-4 py-2 text-sm rounded-md border hover:bg-muted"
           >
-            Отмена
+            Cancel
           </button>
         </div>
       </form>

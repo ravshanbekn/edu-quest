@@ -18,7 +18,6 @@ public class EnrollmentController {
 
     private final EnrollmentService enrollmentService;
 
-    /** Самозапись студента */
     @PostMapping("/api/v1/courses/{id}/enroll")
     @PreAuthorize("hasAuthority('enrollment:self')")
     public ResponseEntity<EnrollmentResponse> selfEnroll(
@@ -28,7 +27,6 @@ public class EnrollmentController {
                 .body(enrollmentService.selfEnroll(p.getId(), id));
     }
 
-    /** Учитель записывает студента */
     @PostMapping("/api/v1/courses/{id}/enroll/{userId}")
     @PreAuthorize("hasAuthority('enrollment:manage')")
     public ResponseEntity<EnrollmentResponse> enrollByTeacher(
@@ -39,7 +37,6 @@ public class EnrollmentController {
                 .body(enrollmentService.enrollByTeacher(p.getId(), p.hasPermission("course:manage_all"), id, userId));
     }
 
-    /** Учитель отписывает студента */
     @DeleteMapping("/api/v1/courses/{id}/enroll/{userId}")
     @PreAuthorize("hasAuthority('enrollment:manage')")
     public ResponseEntity<Void> unenroll(
@@ -50,7 +47,6 @@ public class EnrollmentController {
         return ResponseEntity.noContent().build();
     }
 
-    /** Мои курсы */
     @GetMapping("/api/v1/users/me/enrollments")
     public ResponseEntity<Page<EnrollmentResponse>> myEnrollments(
             @AuthenticationPrincipal UserPrincipal p,

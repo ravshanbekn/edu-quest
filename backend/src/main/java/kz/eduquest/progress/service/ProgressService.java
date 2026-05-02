@@ -38,7 +38,6 @@ public class ProgressService {
     private final UserRepository userRepository;
     private final ApplicationEventPublisher eventPublisher;
 
-    /** Отметить урок как завершённый */
     @Transactional
     public UserProgress completeLesson(Long userId, Long lessonId) {
         Lesson lesson = lessonRepository.findById(lessonId)
@@ -57,28 +56,23 @@ public class ProgressService {
 
         eventPublisher.publishEvent(new LessonCompletedEvent(userId, lessonId));
 
-        // Проверить: все ли уроки блока завершены?
         checkBlockCompletion(userId, lesson);
 
         return progress;
     }
 
-    /** Отправить решение задачи */
     @Transactional
     public TaskSubmission submitTask(Long userId, Long taskId, String answer) {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new IllegalArgumentException("Task not found: " + taskId));
 
-        // Проверка ответа (простое сравнение; можно расширить)
         boolean isCorrect = task.getSolution() != null
                 && task.getSolution().trim().equalsIgnoreCase(answer.trim());
 
-        // Проверяем ДО сохранения, иначе запрос найдёт только что сохранённый submission
         boolean alreadyEarnedXp = isCorrect
                 && submissionRepository.existsByUserIdAndTaskIdAndCorrectTrue(userId, taskId);
         boolean isFirstCorrect = isCorrect && !alreadyEarnedXp;
 
-        // xpEarned: 75 = первое правильное, -1 = XP уже получен ранее, 0 = неверный ответ
         int xpEarned = isFirstCorrect ? 75 : (alreadyEarnedXp ? -1 : 0);
 
         TaskSubmission submission = TaskSubmission.builder()
@@ -97,7 +91,6 @@ public class ProgressService {
         return submission;
     }
 
-    /** Отправить ответы на квиз */
     @Transactional
     public QuizAttempt submitQuiz(Long userId, Long quizId, Object answers, int score, int maxScore) {
         quizRepository.findById(quizId)
@@ -120,14 +113,12 @@ public class ProgressService {
         return attempt;
     }
 
-    /** Открыть подсказку по порядковому номеру (штраф XP) */
     @Transactional
     public Hint revealHint(Long userId, Long taskId, int hintOrder) {
         Hint hint = hintRepository.findByTaskIdAndSortOrder(taskId, hintOrder)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Hint not found: task=" + taskId + ", order=" + hintOrder));
 
-        // Обновить счётчик подсказок в прогрессе урока
         Long lessonId = hint.getTask().getLesson().getId();
         progressRepository.findByUserIdAndLessonId(userId, lessonId)
                 .ifPresent(p -> {
@@ -135,12 +126,11 @@ public class ProgressService {
                     progressRepository.save(p);
                 });
 
-        eventPublisher.publishEvent(new HintUsedEvent(userId, hint.getId(), hint.getTask().getId()));
+        eventPublisher.publishEvent(new HintUsedEvent(userId, hint.getId(), hint.getTask().getId(), hint.getXpPenalty()));
 
         return hint;
     }
 
-    /** Проверить завершение всех уроков в блоке */
     private void checkBlockCompletion(Long userId, Lesson completedLesson) {
         Long blockId = completedLesson.getBlock().getId();
         List<Lesson> allLessons = lessonRepository.findByBlockIdOrderBySortOrder(blockId);
@@ -153,7 +143,6 @@ public class ProgressService {
 
         if (allCompleted) {
             eventPublisher.publishEvent(new BlockCompletedEvent(userId, blockId));
-            // TODO: проверить завершение всего курса
         }
     }
 }

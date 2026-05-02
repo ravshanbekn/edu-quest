@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import type { CourseResponse } from "@/types/course.types";
 
-// Генерирует один из нескольких gradient пресетов на основе строки
 const GRADIENTS = [
   "from-violet-500 to-indigo-600",
   "from-amber-400 to-orange-500",
@@ -63,7 +62,7 @@ export function CourseCard({ course }: CourseCardProps) {
         )}
         {!course.published && (
           <span className="inline-block text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded">
-            Черновик
+            Draft
           </span>
         )}
       </div>

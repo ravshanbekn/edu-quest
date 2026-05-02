@@ -23,7 +23,6 @@ public class EnrollmentService {
     private final CourseService courseService;
     private final UserRepository userRepository;
 
-    /** Самозапись студента */
     @Transactional
     public EnrollmentResponse selfEnroll(Long studentId, Long courseId) {
         Course course = courseService.findCourseOrThrow(courseId);
@@ -33,7 +32,6 @@ public class EnrollmentService {
         return enroll(studentId, courseId, null);
     }
 
-    /** Запись учителем / админом */
     @Transactional
     public EnrollmentResponse enrollByTeacher(Long teacherId, boolean isAdmin, Long courseId, Long studentId) {
         Course course = courseService.findCourseOrThrow(courseId);
@@ -41,7 +39,6 @@ public class EnrollmentService {
         return enroll(studentId, courseId, teacherId);
     }
 
-    /** Отписать студента */
     @Transactional
     public void unenroll(Long teacherId, boolean isAdmin, Long courseId, Long studentId) {
         Course course = courseService.findCourseOrThrow(courseId);
@@ -53,7 +50,6 @@ public class EnrollmentService {
         enrollmentRepository.save(enrollment);
     }
 
-    /** Мои курсы */
     public Page<EnrollmentResponse> getMyEnrollments(Long userId, Pageable pageable) {
         return enrollmentRepository.findByUserId(userId, pageable).map(EnrollmentResponse::from);
     }

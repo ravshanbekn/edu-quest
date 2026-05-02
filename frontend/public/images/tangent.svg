@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 420" font-family="Arial,sans-serif">
+  <rect width="420" height="420" fill="#fff" rx="8" stroke="#e0e0e0"/>
+  <g stroke="#f0f0f0" stroke-width="1">
+    <line x1="30" y1="70" x2="390" y2="70"/><line x1="30" y1="130" x2="390" y2="130"/>
+    <line x1="30" y1="190" x2="390" y2="190"/><line x1="30" y1="250" x2="390" y2="250"/>
+    <line x1="30" y1="310" x2="390" y2="310"/><line x1="30" y1="370" x2="390" y2="370"/>
+    <line x1="90" y1="30" x2="90" y2="390"/><line x1="150" y1="30" x2="150" y2="390"/>
+    <line x1="210" y1="30" x2="210" y2="390"/><line x1="270" y1="30" x2="270" y2="390"/>
+    <line x1="330" y1="30" x2="330" y2="390"/><line x1="390" y1="30" x2="390" y2="390"/>
+  </g>
+  <line x1="20" y1="310" x2="400" y2="310" stroke="#333" stroke-width="2"/>
+  <polygon points="402,310 393,305 393,315" fill="#333"/>
+  <line x1="90" y1="400" x2="90" y2="20" stroke="#333" stroke-width="2"/>
+  <polygon points="90,18 85,28 95,28" fill="#333"/>
+  <text x="406" y="314" font-size="15" fill="#333">x</text>
+  <text x="85" y="14" font-size="15" fill="#333">y</text>
+  <!-- Curve: y = x^2, vertex at origin (90,310), 60px/unit -->
+  <!-- point at x=2 (210,70): y=4 -->
+  <path d="M 30,382 C 50,356 70,338 90,310 C 110,282 150,202 210,70"
+        stroke="#1565c0" stroke-width="2.5" fill="none"/>
+  <!-- Tangent point at x=1.5 (180,175): y=2.25 -->
+  <circle cx="180" cy="175" r="5" fill="#e53935"/>
+  <!-- Tangent line: slope = 2*1.5=3, through (180,175), dy=60px → dx=20px per unit -->
+  <!-- In pixels: slope = 3*(60/60) = 3 px/px = rise 3 for run 1 -->
+  <!-- line from x=120 to x=240: y = 175 + 3*(x-180) -->
+  <line x1="110" y1="385" x2="250" y2="175" stroke="#e53935" stroke-width="2"/>
+  <text x="255" y="172" font-size="12" fill="#e53935" font-weight="bold">касательная</text>
+  <!-- Drop lines -->
+  <line x1="180" y1="310" x2="180" y2="175" stroke="#888" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="174" y="326" font-size="11" fill="#777">x₀</text>
+  <!-- Slope annotation -->
+  <text x="115" y="355" font-size="11" fill="#e53935">k = f′(x₀)</text>
+  <text x="210" y="413" font-size="12" fill="#555" text-anchor="middle">Касательная к кривой в точке</text>
+</svg>

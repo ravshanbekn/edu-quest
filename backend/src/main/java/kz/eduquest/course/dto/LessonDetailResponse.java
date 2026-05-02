@@ -23,7 +23,7 @@ public record LessonDetailResponse(
     }
 
     public record ContentResponse(Long id, ContentType contentType, String body, String videoUrl, int sortOrder) {
-        static ContentResponse from(LessonContent c) {
+        public static ContentResponse from(LessonContent c) {
             return new ContentResponse(c.getId(), c.getContentType(), c.getBody(), c.getVideoUrl(), c.getSortOrder());
         }
     }

@@ -39,20 +39,14 @@ public class AuthService {
         if (userRepository.existsByEmail(request.email())) {
             throw new IllegalArgumentException("Email already in use: " + request.email());
         }
-
-        // Создать пользователя
         User user = User.builder()
                 .email(request.email())
                 .passwordHash(passwordEncoder.encode(request.password()))
                 .build();
-
-        // Назначить роль STUDENT по умолчанию
         roleRepository.findByName("STUDENT")
                 .ifPresent(role -> user.getRoles().add(role));
 
         userRepository.save(user);
-
-        // Создать пустой профиль
         profileRepository.save(
                 UserProfile.builder()
                         .user(user)
@@ -84,8 +78,6 @@ public class AuthService {
         var userId = jwtService.extractUserId(request.refreshToken());
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
-
-        // Инвалидируем старый refresh token
         jwtService.blacklistRefreshToken(request.refreshToken());
 
         return generateTokens(user);

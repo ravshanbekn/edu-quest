@@ -10,7 +10,7 @@ interface EmptyStateProps {
 }
 
 export function EmptyState({
-  title = "Ничего не найдено",
+  title = "Nothing found",
   description,
   icon: Icon = PackageOpen,
   children,

@@ -20,13 +20,13 @@ function TaskItem({ task }: { task: TaskResponse }) {
     onSuccess: (data) => {
       setResult({ correct: data.correct, xpEarned: data.xpEarned });
       if (data.correct) {
-        if (data.xpEarned === -1) toast.info("Правильно! XP уже был начислен ранее");
-        else toast.success(`Правильно! +${data.xpEarned} XP`);
+        if (data.xpEarned === -1) toast.info("Correct! XP was already awarded before");
+        else toast.success(`Correct! +${data.xpEarned} XP`);
       } else {
-        toast.error("Неправильный ответ");
+        toast.error("Wrong answer");
       }
     },
-    onError: () => toast.error("Ошибка отправки ответа"),
+    onError: () => toast.error("Error submitting answer"),
   });
 
   const hintMutation = useMutation({
@@ -35,7 +35,7 @@ function TaskItem({ task }: { task: TaskResponse }) {
       setRevealedHints((prev) => [...prev, hint]);
       setNextHintIndex((prev) => prev + 1);
     },
-    onError: () => toast.error("Ошибка получения подсказки"),
+    onError: () => toast.error("Error fetching hint"),
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -76,9 +76,9 @@ function TaskItem({ task }: { task: TaskResponse }) {
           {result.correct ? <CheckCircle className="h-4 w-4" /> : <XCircle className="h-4 w-4" />}
           {result.correct
               ? result.xpEarned === -1
-                ? "Верно! XP уже был начислен ранее"
-                : `Верно! +${result.xpEarned} XP`
-              : "Неверно, попробуйте ещё раз"}
+                ? "Correct! XP was already awarded before"
+                : `Correct! +${result.xpEarned} XP`
+              : "Incorrect, try again"}
         </div>
       )}
 
@@ -89,7 +89,7 @@ function TaskItem({ task }: { task: TaskResponse }) {
             <textarea
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
-              placeholder="Введите ваш код..."
+              placeholder="Enter your code..."
               rows={4}
               className="w-full rounded-md border bg-background px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary resize-none"
             />
@@ -97,7 +97,7 @@ function TaskItem({ task }: { task: TaskResponse }) {
             <input
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
-              placeholder="Введите ответ..."
+              placeholder="Enter answer..."
               className="w-full rounded-md border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
             />
           )}
@@ -109,7 +109,7 @@ function TaskItem({ task }: { task: TaskResponse }) {
               className="flex items-center gap-1 px-3 py-1.5 text-sm rounded-md bg-primary text-white hover:bg-primary/90 disabled:opacity-50"
             >
               <Send className="h-3.5 w-3.5" />
-              {submitMutation.isPending ? "..." : "Отправить"}
+              {submitMutation.isPending ? "..." : "Submit"}
             </button>
 
             {task.hintCount > nextHintIndex && (
@@ -120,7 +120,7 @@ function TaskItem({ task }: { task: TaskResponse }) {
                 className="flex items-center gap-1 px-3 py-1.5 text-sm rounded-md border hover:bg-muted disabled:opacity-50"
               >
                 <Lightbulb className="h-3.5 w-3.5" />
-                Подсказка ({task.hintCount - nextHintIndex})
+                Hint ({task.hintCount - nextHintIndex})
               </button>
             )}
           </div>
@@ -137,7 +137,7 @@ export function TaskSection({ tasks }: TaskSectionProps) {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-semibold">Задания</h2>
+      <h2 className="text-lg font-semibold">Tasks</h2>
       {sorted.map((task) => (
         <TaskItem key={task.id} task={task} />
       ))}

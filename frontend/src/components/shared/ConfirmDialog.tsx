@@ -15,7 +15,7 @@ export function ConfirmDialog({
   onConfirm,
   title,
   description,
-  confirmLabel = "Подтвердить",
+  confirmLabel = "Confirm",
   destructive = false,
   loading = false,
 }: ConfirmDialogProps) {
@@ -34,7 +34,7 @@ export function ConfirmDialog({
             onClick={onClose}
             className="px-4 py-2 text-sm rounded-md border hover:bg-muted"
           >
-            Отмена
+            Cancel
           </button>
           <button
             onClick={onConfirm}

@@ -35,7 +35,6 @@ public class Enrollment {
     @Column(name = "enrolled_at", nullable = false, updatable = false)
     private LocalDateTime enrolledAt;
 
-    /** NULL = самозапись, иначе = учитель/админ */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "enrolled_by")
     private User enrolledBy;

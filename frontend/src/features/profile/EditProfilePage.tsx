@@ -10,8 +10,8 @@ import { UserAvatar } from "@/components/shared/UserAvatar";
 import { LoadingSpinner } from "@/components/shared/LoadingSpinner";
 
 const schema = z.object({
-  displayName: z.string().max(100, "Максимум 100 символов").optional(),
-  bio: z.string().max(500, "Максимум 500 символов").optional(),
+  displayName: z.string().max(100, "Maximum 100 characters").optional(),
+  bio: z.string().max(500, "Maximum 500 characters").optional(),
   isPublic: z.boolean(),
 });
 
@@ -44,26 +44,26 @@ export function EditProfilePage() {
     mutationFn: updateProfile,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["myProfile"] });
-      toast.success("Профиль обновлён");
+      toast.success("Profile updated");
       navigate("/profile");
     },
-    onError: () => toast.error("Ошибка обновления профиля"),
+    onError: () => toast.error("Error updating profile"),
   });
 
   const avatarMutation = useMutation({
     mutationFn: uploadAvatar,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["myProfile"] });
-      toast.success("Аватар обновлён");
+      toast.success("Avatar updated");
     },
-    onError: () => toast.error("Ошибка загрузки аватара"),
+    onError: () => toast.error("Error uploading avatar"),
   });
 
   if (isLoading) return <LoadingSpinner className="py-20" />;
 
   return (
     <div className="max-w-lg space-y-6">
-      <h1 className="text-2xl font-bold">Редактирование профиля</h1>
+      <h1 className="text-2xl font-bold">Edit profile</h1>
 
       <div className="flex items-center gap-4">
         <UserAvatar
@@ -72,7 +72,7 @@ export function EditProfilePage() {
           size="lg"
         />
         <label className="cursor-pointer px-3 py-2 text-sm border rounded-md hover:bg-muted">
-          Загрузить аватар
+          Upload avatar
           <input
             type="file"
             accept="image/*"
@@ -90,7 +90,7 @@ export function EditProfilePage() {
         className="space-y-4"
       >
         <div className="space-y-2">
-          <label className="text-sm font-medium">Имя</label>
+          <label className="text-sm font-medium">Display name</label>
           <input
             type="text"
             className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
@@ -102,7 +102,7 @@ export function EditProfilePage() {
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium">О себе</label>
+          <label className="text-sm font-medium">About me</label>
           <textarea
             rows={4}
             className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring resize-none"
@@ -115,7 +115,7 @@ export function EditProfilePage() {
 
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" {...register("isPublic")} className="rounded" />
-          Публичный профиль
+          Public profile
         </label>
 
         <div className="flex gap-2">
@@ -124,14 +124,14 @@ export function EditProfilePage() {
             disabled={mutation.isPending}
             className="px-4 py-2 text-sm rounded-md bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
           >
-            {mutation.isPending ? "Сохранение..." : "Сохранить"}
+            {mutation.isPending ? "Saving..." : "Save"}
           </button>
           <button
             type="button"
             onClick={() => navigate("/profile")}
             className="px-4 py-2 text-sm rounded-md border hover:bg-muted"
           >
-            Отмена
+            Cancel
           </button>
         </div>
       </form>

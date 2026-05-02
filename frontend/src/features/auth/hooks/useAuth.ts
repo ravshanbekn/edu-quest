@@ -16,10 +16,10 @@ export function useLogin() {
       login(data.accessToken, data.refreshToken);
       const from = (location.state as { from?: { pathname: string } })?.from?.pathname || "/dashboard";
       navigate(from, { replace: true });
-      toast.success("Вы вошли в систему");
+      toast.success("You are signed in");
     },
     onError: () => {
-      toast.error("Неверный email или пароль");
+      toast.error("Incorrect email or password");
     },
   });
 }
@@ -33,10 +33,10 @@ export function useRegister() {
     onSuccess: (data) => {
       login(data.accessToken, data.refreshToken);
       navigate("/dashboard", { replace: true });
-      toast.success("Регистрация прошла успешно");
+      toast.success("Registration successful");
     },
     onError: () => {
-      toast.error("Ошибка регистрации. Возможно, email уже занят.");
+      toast.error("Registration error. The email may already be taken.");
     },
   });
 }

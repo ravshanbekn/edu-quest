@@ -6,6 +6,7 @@ import kz.eduquest.course.dto.CreateQuizRequest;
 import kz.eduquest.course.dto.QuizResponse;
 import kz.eduquest.course.entity.QuizQuestion;
 import kz.eduquest.course.service.QuizService;
+import kz.eduquest.progress.dto.QuizAttemptResponse;
 import kz.eduquest.progress.dto.SubmitQuizRequest;
 import kz.eduquest.progress.entity.QuizAttempt;
 import kz.eduquest.progress.service.ProgressService;
@@ -17,7 +18,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -39,19 +39,17 @@ public class QuizController {
     @PostMapping("/api/v1/quizzes/{id}/attempt")
     @PreAuthorize("hasAuthority('quiz:take')")
     public ResponseEntity<QuizResponse> startAttempt(@PathVariable Long id) {
-        // Возвращает квиз (вопросы без правильных ответов)
         return ResponseEntity.ok(quizService.getQuiz(id));
     }
 
     @PostMapping("/api/v1/quizzes/{id}/attempt/{attemptId}/submit")
     @PreAuthorize("hasAuthority('quiz:take')")
-    public ResponseEntity<QuizAttempt> submitAttempt(
+    public ResponseEntity<QuizAttemptResponse> submitAttempt(
             @AuthenticationPrincipal UserPrincipal p,
             @PathVariable Long id,
             @PathVariable Long attemptId,
             @Valid @RequestBody SubmitQuizRequest request) {
 
-        // Подсчёт баллов
         var quiz = quizService.findQuizOrThrow(id);
         int score = 0;
         int maxScore = quiz.getQuestions().size();
@@ -63,6 +61,7 @@ public class QuizController {
             }
         }
 
-        return ResponseEntity.ok(progressService.submitQuiz(p.getId(), id, request.answers(), score, maxScore));
+        QuizAttempt attempt = progressService.submitQuiz(p.getId(), id, request.answers(), score, maxScore);
+        return ResponseEntity.ok(QuizAttemptResponse.of(attempt.getId(), id, score, maxScore));
     }
 }

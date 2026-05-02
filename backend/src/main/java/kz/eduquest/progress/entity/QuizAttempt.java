@@ -30,7 +30,6 @@ public class QuizAttempt {
     @JoinColumn(name = "quiz_id", nullable = false)
     private Quiz quiz;
 
-    /** Ответы пользователя в формате JSONB */
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(nullable = false, columnDefinition = "jsonb")
     private Object answers;

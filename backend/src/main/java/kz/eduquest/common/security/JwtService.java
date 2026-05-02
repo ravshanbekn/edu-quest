@@ -17,7 +17,6 @@ public class JwtService {
 
     private final JwtProperties props;
 
-    /** Blacklisted refresh token JTIs. TODO: заменить на Redis */
     private final Set<String> blacklistedJtis = ConcurrentHashMap.newKeySet();
 
     public String generateAccessToken(Long userId, String email, Set<String> roles) {

@@ -15,9 +15,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import java.util.Set;
 
-/**
- * REST API: Users & Profiles (архитектурный документ §7.2).
- */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/users")
@@ -25,19 +22,16 @@ public class UserController {
 
     private final UserService userService;
 
-    /** GET /api/v1/users/me — текущий пользователь */
     @GetMapping("/me")
     public ResponseEntity<UserResponse> getMe(@AuthenticationPrincipal UserPrincipal principal) {
         return ResponseEntity.ok(userService.getUser(principal.getId()));
     }
 
-    /** GET /api/v1/users/me/profile — мой профиль */
     @GetMapping("/me/profile")
     public ResponseEntity<ProfileResponse> getMyProfile(@AuthenticationPrincipal UserPrincipal principal) {
         return ResponseEntity.ok(userService.getProfile(principal.getId(), principal.getId(), false));
     }
 
-    /** PUT /api/v1/users/me/profile — обновить профиль */
     @PutMapping("/me/profile")
     public ResponseEntity<ProfileResponse> updateMyProfile(
             @AuthenticationPrincipal UserPrincipal principal,
@@ -45,10 +39,6 @@ public class UserController {
         return ResponseEntity.ok(userService.updateProfile(principal.getId(), request));
     }
 
-    // POST /api/v1/users/me/avatar — временно отключено (MinIO не настроен)
-    // @PostMapping(value = "/me/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-
-    /** GET /api/v1/users/{id}/profile — профиль пользователя */
     @GetMapping("/{id}/profile")
     public ResponseEntity<ProfileResponse> getUserProfile(
             @PathVariable Long id,
@@ -57,14 +47,12 @@ public class UserController {
         return ResponseEntity.ok(userService.getProfile(id, principal.getId(), isAdmin));
     }
 
-    /** GET /api/v1/users — список пользователей (ADMIN only) */
     @GetMapping
     @PreAuthorize("hasAuthority('user:manage')")
     public ResponseEntity<Page<UserResponse>> getAllUsers(Pageable pageable) {
         return ResponseEntity.ok(userService.getAllUsers(pageable));
     }
 
-    /** PUT /api/v1/users/{id}/roles — назначить роли (ADMIN only) */
     @PutMapping("/{id}/roles")
     @PreAuthorize("hasAuthority('role:manage')")
     public ResponseEntity<UserResponse> assignRoles(

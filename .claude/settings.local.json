@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem C:\\\\projects\\\\edu-quest\\\\frontend\\\\src -Recurse -File | Select-Object Name, FullName | Where-Object {$_.Name -match \"main|app|index|global\"})",
+      "Bash(Get-ChildItem -Path \"C:\\\\projects\\\\edu-quest\" -Recurse -Filter \"*.java\" -ErrorAction SilentlyContinue)",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(Get-ChildItem -Path . -Recurse -Filter \"*storage*\" -ErrorAction SilentlyContinue)",
+      "Bash(Select-Object FullName)",
+      "Bash(Get-ChildItem -Path \"C:\\\\projects\\\\edu-quest\\\\frontend\\\\src\" -Recurse -Directory)",
+      "Bash(xargs grep *)"
+    ]
+  }
+}
