@@ -15,11 +15,11 @@ export function XpBar({ currentXp, xpForNextLevel, level, className }: XpBarProp
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-level text-level-foreground">
-            Ур. {level}
+            Lvl. {level}
           </span>
         </div>
         <span className="text-xs text-muted-foreground">
-          {currentXp.toLocaleString("ru")} / {xpForNextLevel.toLocaleString("ru")} XP
+          {currentXp.toLocaleString("en")} / {xpForNextLevel.toLocaleString("en")} XP
         </span>
       </div>
 

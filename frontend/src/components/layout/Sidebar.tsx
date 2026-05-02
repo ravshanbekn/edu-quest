@@ -32,19 +32,19 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { to: "/dashboard",   label: "Главная",      icon: Home,          authRequired: true },
-  { to: "/courses",     label: "Каталог курсов", icon: BookOpen },
-  { to: "/my-courses",  label: "Мои курсы",    icon: GraduationCap, authRequired: true },
-  { to: "/leaderboard", label: "Лидерборд",    icon: Trophy },
-  { to: "/badges",      label: "Бейджи",       icon: Award,         authRequired: true },
-  { to: "/xp/history",  label: "История XP",   icon: History,       authRequired: true },
-  { to: "/admin/users", label: "Управление",   icon: Settings,      roles: ["ADMIN"] },
+  { to: "/dashboard",   label: "Home",          icon: Home,          authRequired: true },
+  { to: "/courses",     label: "Course catalog", icon: BookOpen },
+  { to: "/my-courses",  label: "My courses",    icon: GraduationCap, authRequired: true },
+  { to: "/leaderboard", label: "Leaderboard",   icon: Trophy },
+  { to: "/badges",      label: "Badges",        icon: Award,         authRequired: true },
+  { to: "/xp/history",  label: "XP history",    icon: History,       authRequired: true },
+  { to: "/admin/users", label: "Management",    icon: Settings,      roles: ["ADMIN"] },
 ];
 
-// Пункты доступные без авторизации / для гостей
+// Routes accessible without authentication / for guests
 const GUEST_ROUTES = new Set(["/courses", "/leaderboard"]);
 
-// Единый класс для всех кнопок/ссылок в сайдбаре (обеспечивает одинаковое выравнивание)
+// Shared class for all buttons/links in the sidebar (ensures consistent alignment)
 const itemBase = "flex items-center gap-3 rounded-md text-sm transition-colors";
 const itemPadding = "px-3 py-2";
 const itemPaddingCollapsed = "px-2 py-2 justify-center";
@@ -61,17 +61,17 @@ export function Sidebar() {
   const { theme, toggle: toggleTheme } = useThemeStore();
 
   const userRoles = user?.roles ?? [];
-  // Гость = не авторизован ИЛИ имеет только роль GUEST
+  // Guest = not authenticated OR has only the GUEST role
   const isGuest =
     !isAuthenticated ||
     (userRoles.length > 0 && userRoles.every((r) => r === "GUEST"));
 
   const filteredItems = navItems.filter((item) => {
-    // Гость видит только маршруты из GUEST_ROUTES
+    // Guest only sees routes from GUEST_ROUTES
     if (isGuest && !GUEST_ROUTES.has(item.to)) return false;
-    // Требует авторизации
+    // Requires authentication
     if (item.authRequired && !isAuthenticated) return false;
-    // Требует определённую роль
+    // Requires a specific role
     if (item.roles && !item.roles.some((r) => userRoles.includes(r))) return false;
     return true;
   });
@@ -94,23 +94,23 @@ export function Sidebar() {
             </Link>
           )}
 
-          {/* Mobile: закрыть */}
+          {/* Mobile: close */}
           <button
             onClick={() => setSidebarOpen(false)}
             className="lg:hidden ml-auto p-2 rounded-md text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors"
-            aria-label="Закрыть меню"
+            aria-label="Close menu"
           >
             <X className="h-5 w-5" />
           </button>
 
-          {/* Desktop: свернуть/развернуть */}
+          {/* Desktop: collapse/expand */}
           <button
             onClick={toggleSidebarCollapsed}
             className={cn(
               "hidden lg:flex p-2 rounded-md text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors",
               collapsed ? "mx-auto" : "ml-auto"
             )}
-            aria-label={collapsed ? "Развернуть меню" : "Свернуть меню"}
+            aria-label={collapsed ? "Expand menu" : "Collapse menu"}
           >
             {collapsed ? (
               <PanelLeftOpen className="h-5 w-5" />
@@ -148,19 +148,19 @@ export function Sidebar() {
           })}
         </nav>
 
-        {/* ── Bottom: тема + профиль + выход ─────────────────── */}
+        {/* ── Bottom: theme + profile + sign out ─────────────────── */}
         <div className="border-t border-sidebar-border px-3 py-3 space-y-0.5">
-          {/* Переключатель темы */}
+          {/* Theme toggle */}
           <button
             onClick={toggleTheme}
             title={
               collapsed
                 ? theme === "dark"
-                  ? "Светлая тема"
-                  : "Тёмная тема"
+                  ? "Light theme"
+                  : "Dark theme"
                 : undefined
             }
-            aria-label={theme === "dark" ? "Переключить на светлую тему" : "Переключить на тёмную тему"}
+            aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
             className={cn(itemBase, padding, "w-full text-sidebar-foreground hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground")}
           >
             {theme === "dark" ? (
@@ -169,17 +169,17 @@ export function Sidebar() {
               <Moon className="h-4 w-4 shrink-0" />
             )}
             {!collapsed && (
-              <span>{theme === "dark" ? "Светлая тема" : "Тёмная тема"}</span>
+              <span>{theme === "dark" ? "Light theme" : "Dark theme"}</span>
             )}
           </button>
 
-          {/* Авторизован и не гость — Профиль + Выйти */}
+          {/* Authenticated and not a guest — Profile + Sign out */}
           {isAuthenticated && !isGuest && (
             <>
               <Link
                 to="/profile"
                 onClick={() => setSidebarOpen(false)}
-                title={collapsed ? "Профиль" : undefined}
+                title={collapsed ? "Profile" : undefined}
                 className={cn(
                   itemBase,
                   padding,
@@ -189,42 +189,42 @@ export function Sidebar() {
                 )}
               >
                 <User className="h-4 w-4 shrink-0" />
-                {!collapsed && <span>Профиль</span>}
+                {!collapsed && <span>Profile</span>}
               </Link>
 
               <button
                 onClick={logout}
-                title={collapsed ? "Выйти" : undefined}
+                title={collapsed ? "Sign out" : undefined}
                 className={cn(itemBase, padding, "w-full text-sidebar-foreground hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground")}
               >
                 <LogOut className="h-4 w-4 shrink-0" />
-                {!collapsed && <span>Выйти</span>}
+                {!collapsed && <span>Sign out</span>}
               </button>
             </>
           )}
 
-          {/* Авторизован как GUEST — только Выйти */}
+          {/* Authenticated as GUEST — Sign out only */}
           {isAuthenticated && isGuest && (
             <button
               onClick={logout}
-              title={collapsed ? "Выйти" : undefined}
+              title={collapsed ? "Sign out" : undefined}
               className={cn(itemBase, padding, "w-full text-sidebar-foreground hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground")}
             >
               <LogOut className="h-4 w-4 shrink-0" />
-              {!collapsed && <span>Выйти</span>}
+              {!collapsed && <span>Sign out</span>}
             </button>
           )}
 
-          {/* Не авторизован — только Войти */}
+          {/* Not authenticated — Sign in only */}
           {!isAuthenticated && (
             <Link
               to="/login"
               onClick={() => setSidebarOpen(false)}
-              title={collapsed ? "Войти" : undefined}
+              title={collapsed ? "Sign in" : undefined}
               className={cn(itemBase, padding, "text-sidebar-foreground hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground")}
             >
               <LogIn className="h-4 w-4 shrink-0" />
-              {!collapsed && <span>Войти</span>}
+              {!collapsed && <span>Sign in</span>}
             </Link>
           )}
         </div>
@@ -238,7 +238,7 @@ export function Sidebar() {
       <button
         onClick={() => setSidebarOpen(true)}
         className="fixed top-3 left-3 z-30 lg:hidden p-2 rounded-md bg-background/80 backdrop-blur border text-foreground hover:bg-muted transition-colors"
-        aria-label="Открыть меню"
+        aria-label="Open menu"
       >
         <Menu className="h-5 w-5" />
       </button>

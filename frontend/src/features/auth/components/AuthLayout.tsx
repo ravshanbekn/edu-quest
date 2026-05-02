@@ -6,10 +6,10 @@ interface AuthLayoutProps {
 }
 
 const features = [
-  { icon: GraduationCap, text: "Структурированные курсы от практиков" },
-  { icon: Zap, text: "Зарабатывайте XP за каждый урок" },
-  { icon: Trophy, text: "Соревнуйтесь в лидерборде" },
-  { icon: Star, text: "Получайте бейджи за достижения" },
+  { icon: GraduationCap, text: "Structured courses from practitioners" },
+  { icon: Zap, text: "Earn XP for every lesson" },
+  { icon: Trophy, text: "Compete on the leaderboard" },
+  { icon: Star, text: "Earn badges for achievements" },
 ];
 
 export function AuthLayout({ children }: AuthLayoutProps) {
@@ -65,12 +65,12 @@ export function AuthLayout({ children }: AuthLayoutProps) {
             className="text-4xl font-bold text-white leading-tight mb-4"
             style={{ fontFamily: "var(--font-display)" }}
           >
-            Учись. Расти.
+            Learn. Grow.
             <br />
-            <span style={{ color: "hsl(38 92% 60%)" }}>Побеждай.</span>
+            <span style={{ color: "hsl(38 92% 60%)" }}>Win.</span>
           </h2>
           <p className="text-white/60 text-base max-w-xs leading-relaxed">
-            Геймифицированная образовательная платформа, где каждый урок — это шаг к новому уровню.
+            A gamified educational platform where every lesson is a step to the next level.
           </p>
         </div>
 

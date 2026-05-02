@@ -41,20 +41,20 @@ export function BlockList({ courseId, blocks, canEdit }: BlockListProps) {
 
   const addMutation = useMutation({
     mutationFn: (title: string) => createBlock(courseId, { title }),
-    onSuccess: () => { invalidate(); setShowAdd(false); toast.success("Блок создан"); },
-    onError: () => toast.error("Ошибка создания блока"),
+    onSuccess: () => { invalidate(); setShowAdd(false); toast.success("Block created"); },
+    onError: () => toast.error("Error creating block"),
   });
 
   const editMutation = useMutation({
     mutationFn: (data: { id: string; title: string }) => updateBlock(data.id, { title: data.title }),
-    onSuccess: () => { invalidate(); setEditingId(null); toast.success("Блок обновлён"); },
-    onError: () => toast.error("Ошибка обновления блока"),
+    onSuccess: () => { invalidate(); setEditingId(null); toast.success("Block updated"); },
+    onError: () => toast.error("Error updating block"),
   });
 
   const deleteMutation = useMutation({
     mutationFn: deleteBlock,
-    onSuccess: () => { invalidate(); setDeleteId(null); toast.success("Блок удалён"); },
-    onError: () => toast.error("Ошибка удаления блока"),
+    onSuccess: () => { invalidate(); setDeleteId(null); toast.success("Block deleted"); },
+    onError: () => toast.error("Error deleting block"),
   });
 
   const sorted = [...blocks].sort((a, b) => a.sortOrder - b.sortOrder);
@@ -84,7 +84,7 @@ export function BlockList({ courseId, blocks, canEdit }: BlockListProps) {
                 <h3 className="flex-1 font-semibold text-sm">{block.title}</h3>
                 {block.lessons && (
                   <span className="text-xs text-muted-foreground">
-                    {block.lessons.length} {block.lessons.length === 1 ? "урок" : "уроков"}
+                    {block.lessons.length} {block.lessons.length === 1 ? "lesson" : "lessons"}
                   </span>
                 )}
                 {canEdit && (
@@ -125,7 +125,7 @@ export function BlockList({ courseId, blocks, canEdit }: BlockListProps) {
             onClick={() => setShowAdd(true)}
             className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground border border-dashed rounded-lg p-3 w-full justify-center"
           >
-            <Plus className="h-4 w-4" /> Добавить блок
+            <Plus className="h-4 w-4" /> Add block
           </button>
         )
       )}
@@ -134,9 +134,9 @@ export function BlockList({ courseId, blocks, canEdit }: BlockListProps) {
         open={!!deleteId}
         onClose={() => setDeleteId(null)}
         onConfirm={() => deleteId && deleteMutation.mutate(deleteId)}
-        title="Удалить блок?"
-        description="Все уроки в этом блоке также будут удалены."
-        confirmLabel="Удалить"
+        title="Delete block?"
+        description="All lessons in this block will also be deleted."
+        confirmLabel="Delete"
         destructive
         loading={deleteMutation.isPending}
       />

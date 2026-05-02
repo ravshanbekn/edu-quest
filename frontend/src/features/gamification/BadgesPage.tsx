@@ -7,7 +7,7 @@ import { BadgeIcon } from "@/components/shared/BadgeIcon";
 import { usePageTitle } from "@/hooks/usePageTitle";
 
 export function BadgesPage() {
-  usePageTitle("Мои бейджи");
+  usePageTitle("My Badges");
   const { data: badges, isLoading } = useQuery({
     queryKey: ["myBadges"],
     queryFn: getMyBadges,
@@ -17,15 +17,15 @@ export function BadgesPage() {
     <div className="space-y-6 max-w-4xl mx-auto">
       <div className="flex items-center gap-2">
         <Award className="h-6 w-6 text-xp" />
-        <h1 className="text-2xl font-bold">Мои бейджи</h1>
+        <h1 className="text-2xl font-bold">My Badges</h1>
       </div>
 
       {isLoading ? (
         <LoadingSpinner size="lg" className="py-20" />
       ) : !badges || badges.length === 0 ? (
         <EmptyState
-          title="У вас пока нет бейджей"
-          description="Проходите курсы и задания, чтобы заработать бейджи"
+          title="No badges yet"
+          description="Complete courses and tasks to earn badges"
           icon={Award}
         />
       ) : (
@@ -49,7 +49,7 @@ export function BadgesPage() {
               <h3 className="font-bold text-sm">{badge.name}</h3>
               <p className="text-xs text-muted-foreground leading-relaxed">{badge.description}</p>
               <p className="text-xs text-muted-foreground/70">
-                {new Date(badge.awardedAt).toLocaleDateString("ru-RU")}
+                {new Date(badge.awardedAt).toLocaleDateString("en-US")}
               </p>
             </div>
           ))}

@@ -10,8 +10,8 @@ interface ThemeState {
 }
 
 /**
- * Определяет предпочтение системы при первом визите.
- * Используется как initial value если пользователь ещё не менял тему.
+ * Reads the system theme preference on first visit.
+ * Used as the initial value if the user has not changed the theme yet.
  */
 function getSystemTheme(): Theme {
   if (typeof window === "undefined") return "light";
@@ -19,7 +19,7 @@ function getSystemTheme(): Theme {
 }
 
 /**
- * Применяет класс .dark к <html> и обновляет color-scheme.
+ * Applies the .dark class to <html> and updates color-scheme.
  */
 export function applyTheme(theme: Theme) {
   const root = document.documentElement;
@@ -47,7 +47,7 @@ export const useThemeStore = create<ThemeState>()(
     {
       name: "edu-quest-theme",
       onRehydrateStorage: () => (state) => {
-        // После восстановления из localStorage применяем сохранённую тему
+        // After rehydration from localStorage, apply the stored theme
         if (state) {
           applyTheme(state.theme);
         }

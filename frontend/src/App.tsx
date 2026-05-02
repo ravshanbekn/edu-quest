@@ -25,19 +25,13 @@ function NavigationInitializer() {
   return null;
 }
 
-/**
- * Применяет тему на mount и слушает системные изменения
- * если пользователь ещё не выставил ручное предпочтение.
- */
 function ThemeInitializer() {
   const theme = useThemeStore((s) => s.theme);
   const setTheme = useThemeStore((s) => s.setTheme);
 
   useEffect(() => {
-    // Применяем сохранённую тему сразу
     applyTheme(theme);
 
-    // Слушаем изменения системной темы
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
     const stored = localStorage.getItem("edu-quest-theme");
     if (!stored) {

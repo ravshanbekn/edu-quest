@@ -26,12 +26,12 @@ const typeIcons: Record<LessonType, React.ComponentType<{ className?: string }>>
 };
 
 const typeLabels: Record<LessonType, string> = {
-  VIDEO: "Видео",
-  TASK: "Задание",
-  QUIZ: "Квиз",
-  MIXED: "Смешанный",
-  THEORY: "Теория",
-  PRACTICE: "Практика",
+  VIDEO: "Video",
+  TASK: "Task",
+  QUIZ: "Quiz",
+  MIXED: "Mixed",
+  THEORY: "Theory",
+  PRACTICE: "Practice",
 };
 
 export function LessonList({ blockId, lessons, courseId, canEdit }: LessonListProps) {
@@ -44,20 +44,20 @@ export function LessonList({ blockId, lessons, courseId, canEdit }: LessonListPr
 
   const addMutation = useMutation({
     mutationFn: (data: { title: string; type: LessonType }) => createLesson(blockId, data),
-    onSuccess: () => { invalidate(); setShowAdd(false); toast.success("Урок создан"); },
-    onError: () => toast.error("Ошибка создания урока"),
+    onSuccess: () => { invalidate(); setShowAdd(false); toast.success("Lesson created"); },
+    onError: () => toast.error("Error creating lesson"),
   });
 
   const editMutation = useMutation({
     mutationFn: (data: { id: string; title: string; type: LessonType }) => updateLesson(data.id, { title: data.title, type: data.type }),
-    onSuccess: () => { invalidate(); setEditingId(null); toast.success("Урок обновлён"); },
-    onError: () => toast.error("Ошибка обновления урока"),
+    onSuccess: () => { invalidate(); setEditingId(null); toast.success("Lesson updated"); },
+    onError: () => toast.error("Error updating lesson"),
   });
 
   const deleteMutation = useMutation({
     mutationFn: deleteLesson,
-    onSuccess: () => { invalidate(); setDeleteId(null); toast.success("Урок удалён"); },
-    onError: () => toast.error("Ошибка удаления урока"),
+    onSuccess: () => { invalidate(); setDeleteId(null); toast.success("Lesson deleted"); },
+    onError: () => toast.error("Error deleting lesson"),
   });
 
   const editingLesson = lessons.find((l) => l.id === editingId);
@@ -117,7 +117,7 @@ export function LessonList({ blockId, lessons, courseId, canEdit }: LessonListPr
             onClick={() => setShowAdd(true)}
             className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground px-2 py-1"
           >
-            <Plus className="h-3.5 w-3.5" /> Добавить урок
+            <Plus className="h-3.5 w-3.5" /> Add lesson
           </button>
         )
       )}
@@ -126,9 +126,9 @@ export function LessonList({ blockId, lessons, courseId, canEdit }: LessonListPr
         open={!!deleteId}
         onClose={() => setDeleteId(null)}
         onConfirm={() => deleteId && deleteMutation.mutate(deleteId)}
-        title="Удалить урок?"
-        description="Это действие нельзя отменить."
-        confirmLabel="Удалить"
+        title="Delete lesson?"
+        description="This action cannot be undone."
+        confirmLabel="Delete"
         destructive
         loading={deleteMutation.isPending}
       />

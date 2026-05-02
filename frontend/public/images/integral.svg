@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 420" font-family="Arial,sans-serif">
+  <rect width="420" height="420" fill="#fff" rx="8" stroke="#e0e0e0"/>
+  <g stroke="#f0f0f0" stroke-width="1">
+    <line x1="30" y1="60" x2="390" y2="60"/><line x1="30" y1="120" x2="390" y2="120"/>
+    <line x1="30" y1="180" x2="390" y2="180"/><line x1="30" y1="240" x2="390" y2="240"/>
+    <line x1="30" y1="300" x2="390" y2="300"/><line x1="30" y1="360" x2="390" y2="360"/>
+    <line x1="90" y1="30" x2="90" y2="390"/><line x1="150" y1="30" x2="150" y2="390"/>
+    <line x1="210" y1="30" x2="210" y2="390"/><line x1="270" y1="30" x2="270" y2="390"/>
+    <line x1="330" y1="30" x2="330" y2="390"/><line x1="390" y1="30" x2="390" y2="390"/>
+  </g>
+  <line x1="20" y1="360" x2="400" y2="360" stroke="#333" stroke-width="2"/>
+  <polygon points="402,360 393,355 393,365" fill="#333"/>
+  <line x1="60" y1="400" x2="60" y2="20" stroke="#333" stroke-width="2"/>
+  <polygon points="60,18 55,28 65,28" fill="#333"/>
+  <text x="406" y="364" font-size="15" fill="#333">x</text>
+  <text x="55" y="14" font-size="15" fill="#333">y</text>
+  <!-- Curve y = -0.003x^2 + 300, scaled: origin (60,360), 60px/unit -->
+  <!-- shaded area from x=a(120) to x=b(330) -->
+  <path d="M 60,360 C 100,320 140,270 180,240 C 220,210 260,195 300,195 C 340,195 370,210 390,240"
+        stroke="none" fill="none"/>
+  <!-- Shaded region under curve from x=120 to x=330 -->
+  <path d="M 120,360 L 120,280 C 140,265 160,248 180,240 C 200,232 220,222 240,210
+           C 260,198 280,195 300,195 C 310,195 320,198 330,202 L 330,360 Z"
+        fill="#bbdefb" opacity="0.7"/>
+  <!-- Curve itself -->
+  <path d="M 60,360 C 80,340 100,310 120,280 C 140,265 160,248 180,240 C 200,232 220,222 240,210
+           C 260,198 280,195 300,195 C 320,198 350,210 380,240"
+        stroke="#1565c0" stroke-width="2.5" fill="none"/>
+  <!-- a and b markers -->
+  <line x1="120" y1="355" x2="120" y2="365" stroke="#333" stroke-width="2"/>
+  <text x="117" y="378" font-size="13" fill="#333" font-weight="bold">a</text>
+  <line x1="330" y1="355" x2="330" y2="365" stroke="#333" stroke-width="2"/>
+  <text x="327" y="378" font-size="13" fill="#333" font-weight="bold">b</text>
+  <!-- Integral label -->
+  <text x="205" y="310" font-size="20" fill="#1565c0" font-style="italic">S</text>
+  <text x="175" y="395" font-size="13" fill="#1565c0">= ∫ f(x) dx</text>
+  <text x="56" y="374" font-size="11" fill="#777">0</text>
+  <text x="210" y="413" font-size="12" fill="#555" text-anchor="middle">Интеграл как площадь под кривой</text>
+</svg>

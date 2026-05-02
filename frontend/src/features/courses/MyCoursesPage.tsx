@@ -11,7 +11,7 @@ import { usePageTitle } from "@/hooks/usePageTitle";
 import { ENROLLMENT_STATUS_LABELS } from "@/lib/constants";
 
 export function MyCoursesPage() {
-  usePageTitle("Мои курсы");
+  usePageTitle("My Courses");
   const { data: user } = useCurrentUser();
   const isTeacher = user?.roles.some((r) => r === "TEACHER" || r === "ADMIN");
   const isStudent = user?.roles.includes("STUDENT");
@@ -19,7 +19,6 @@ export function MyCoursesPage() {
   const enrollPagination = usePagination();
   const teacherPagination = usePagination();
 
-  // Student: enrolled courses
   const { data: enrollments, isLoading: loadingEnrollments } = useQuery({
     queryKey: ["myEnrollments", enrollPagination.page, enrollPagination.size],
     queryFn: () => getMyEnrollments({ page: enrollPagination.page, size: enrollPagination.size }),
@@ -39,13 +38,13 @@ export function MyCoursesPage() {
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Мои курсы</h1>
+        <h1 className="text-2xl font-bold">My Courses</h1>
         {isTeacher && (
           <Link
             to="/courses/create"
             className="flex items-center gap-2 px-4 py-2 text-sm rounded-md bg-primary text-white hover:bg-primary/90"
           >
-            <Plus className="h-4 w-4" /> Создать курс
+            <Plus className="h-4 w-4" /> Create course
           </Link>
         )}
       </div>
@@ -57,11 +56,11 @@ export function MyCoursesPage() {
           {/* Teacher's courses */}
           {isTeacher && (
             <section className="space-y-3">
-              <h2 className="text-lg font-semibold">Мои курсы (преподаватель)</h2>
+              <h2 className="text-lg font-semibold">My courses (teacher)</h2>
               {myCourses.length === 0 ? (
                 <EmptyState
-                  title="Вы ещё не создали курсов"
-                  description="Создайте свой первый курс"
+                  title="You haven't created any courses yet"
+                  description="Create your first course"
                   icon={BookOpen}
                 />
               ) : (
@@ -80,9 +79,9 @@ export function MyCoursesPage() {
                       )}
                       <div className="flex items-center gap-2">
                         {course.published ? (
-                          <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">Опубликован</span>
+                          <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">Published</span>
                         ) : (
-                          <span className="text-xs bg-muted px-2 py-0.5 rounded">Черновик</span>
+                          <span className="text-xs bg-muted px-2 py-0.5 rounded">Draft</span>
                         )}
                       </div>
                     </Link>
@@ -95,18 +94,18 @@ export function MyCoursesPage() {
           {/* Student's enrolled courses */}
           {isStudent && (
             <section className="space-y-3">
-              <h2 className="text-lg font-semibold">Записи на курсы</h2>
+              <h2 className="text-lg font-semibold">Course enrollments</h2>
               {!enrollments || enrollments.empty ? (
                 <EmptyState
-                  title="Вы ещё не записаны на курсы"
-                  description="Перейдите в каталог, чтобы найти интересный курс"
+                  title="You are not enrolled in any courses"
+                  description="Browse the catalog to find an interesting course"
                   icon={BookOpen}
                 >
                   <Link
                     to="/courses"
                     className="px-4 py-2 text-sm rounded-md bg-primary text-white hover:bg-primary/90"
                   >
-                    Перейти в каталог
+                    Go to catalog
                   </Link>
                 </EmptyState>
               ) : (
@@ -127,7 +126,7 @@ export function MyCoursesPage() {
                         }>
                           {ENROLLMENT_STATUS_LABELS[enrollment.status] ?? enrollment.status}
                         </span>
-                        <span>· {new Date(enrollment.enrolledAt).toLocaleDateString("ru-RU")}</span>
+                        <span>· {new Date(enrollment.enrolledAt).toLocaleDateString("en-US")}</span>
                       </div>
                     </Link>
                   ))}

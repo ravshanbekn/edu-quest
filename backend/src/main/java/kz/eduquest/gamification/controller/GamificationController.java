@@ -28,7 +28,6 @@ public class GamificationController {
     private final UserXpLogRepository xpLogRepository;
     private final UserProfileRepository profileRepository;
 
-    /** GET /api/v1/users/me/xp — мой XP и уровень */
     @GetMapping("/api/v1/users/me/xp")
     public ResponseEntity<XpResponse> myXp(@AuthenticationPrincipal UserPrincipal p) {
         UserLevel level = levelService.getLevel(p.getId());
@@ -36,7 +35,6 @@ public class GamificationController {
         return ResponseEntity.ok(new XpResponse(level.getTotalXp(), level.getCurrentLevel(), xpForNext));
     }
 
-    /** GET /api/v1/users/me/badges — мои бейджи */
     @GetMapping("/api/v1/users/me/badges")
     public ResponseEntity<List<BadgeResponse>> myBadges(@AuthenticationPrincipal UserPrincipal p) {
         return ResponseEntity.ok(
@@ -44,7 +42,6 @@ public class GamificationController {
         );
     }
 
-    /** GET /api/v1/users/{id}/badges — бейджи пользователя */
     @GetMapping("/api/v1/users/{id}/badges")
     public ResponseEntity<List<BadgeResponse>> userBadges(@PathVariable Long id) {
         return ResponseEntity.ok(
@@ -52,7 +49,6 @@ public class GamificationController {
         );
     }
 
-    /** GET /api/v1/leaderboard — лидерборд (top-N по XP) */
     @GetMapping("/api/v1/leaderboard")
     public ResponseEntity<List<LeaderboardEntry>> leaderboard(Pageable pageable) {
         Page<UserLevel> page = levelRepository.findAllByOrderByTotalXpDesc(pageable);
@@ -71,7 +67,6 @@ public class GamificationController {
         return ResponseEntity.ok(entries);
     }
 
-    /** GET /api/v1/users/me/xp/history — история начислений XP */
     @GetMapping("/api/v1/users/me/xp/history")
     public ResponseEntity<Page<XpLogResponse>> xpHistory(
             @AuthenticationPrincipal UserPrincipal p,

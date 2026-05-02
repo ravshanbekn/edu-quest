@@ -1,9 +1,5 @@
 import type { NavigateFunction } from "react-router-dom";
 
-/**
- * Глобальный NavigationService для навигации вне React-компонентов (например, в axios interceptors).
- * Инициализируется в App.tsx через setNavigate().
- */
 let _navigate: NavigateFunction | null = null;
 
 export const NavigationService = {
@@ -14,7 +10,7 @@ export const NavigationService = {
     if (_navigate) {
       _navigate(to);
     } else {
-      // Fallback если сервис ещё не инициализирован
+      // Fallback if service is not yet initialized
       window.location.href = to;
     }
   },

@@ -19,14 +19,12 @@ public class ProgressController {
     private final ProgressService progressService;
     private final UserProgressRepository progressRepository;
 
-    /** GET /api/v1/users/me/progress — общий прогресс */
     @GetMapping("/api/v1/users/me/progress")
     public ResponseEntity<List<UserProgressResponse>> myProgress(@AuthenticationPrincipal UserPrincipal p) {
         return ResponseEntity.ok(progressRepository.findByUserId(p.getId()).stream()
                 .map(UserProgressResponse::from).toList());
     }
 
-    /** GET /api/v1/courses/{id}/progress — прогресс по курсу */
     @GetMapping("/api/v1/courses/{id}/progress")
     public ResponseEntity<List<UserProgressResponse>> courseProgress(
             @AuthenticationPrincipal UserPrincipal p,
@@ -36,7 +34,6 @@ public class ProgressController {
                 .map(UserProgressResponse::from).toList());
     }
 
-    /** POST /api/v1/lessons/{id}/complete — отметить урок завершённым */
     @PostMapping("/api/v1/lessons/{id}/complete")
     @PreAuthorize("hasAuthority('lesson:complete')")
     public ResponseEntity<UserProgressResponse> completeLesson(

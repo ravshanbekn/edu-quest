@@ -20,9 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/**
- * Badge Evaluator — слушает события и проверяет условия для выдачи бейджей (§6.3, §6.4).
- */
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -85,7 +82,6 @@ public class BadgeEvaluator {
             case TASKS_SOLVED      -> countSolvedTasks(userId) >= required;
             case LEVEL_REACHED     -> getCurrentLevel(userId) >= required;
             case XP_EARNED         -> getTotalXp(userId) >= required;
-            // TODO: STREAK, PERFECT_QUIZZES, COURSE_NO_HINTS — реализовать при добавлении соответствующей логики
             case STREAK, PERFECT_QUIZZES, COURSE_NO_HINTS -> false;
         };
     }
@@ -95,7 +91,6 @@ public class BadgeEvaluator {
     }
 
     private long countCompletedCourses(Long userId) {
-        // Считаем по XP логу с типом COURSE_COMPLETE
         return xpLogRepository.findByUserIdOrderByCreatedAtDesc(userId, org.springframework.data.domain.Pageable.unpaged())
                 .stream()
                 .filter(entry -> entry.getActionType() == kz.eduquest.gamification.entity.ActionType.COURSE_COMPLETE)
@@ -103,7 +98,6 @@ public class BadgeEvaluator {
     }
 
     private long countSolvedTasks(Long userId) {
-        // Уникальные решённые задачи через XP лог
         return xpLogRepository.findByUserIdOrderByCreatedAtDesc(userId, org.springframework.data.domain.Pageable.unpaged())
                 .stream()
                 .filter(entry -> entry.getActionType() == kz.eduquest.gamification.entity.ActionType.TASK_SOLVED)

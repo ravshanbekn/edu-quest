@@ -14,6 +14,7 @@ import { CreateCoursePage } from "@/features/courses/CreateCoursePage";
 import { EditCoursePage } from "@/features/courses/EditCoursePage";
 import { MyCoursesPage } from "@/features/courses/MyCoursesPage";
 import { LessonPage } from "@/features/lesson/LessonPage";
+import { LessonEditPage } from "@/features/lesson/LessonEditPage";
 import { LeaderboardPage } from "@/features/gamification/LeaderboardPage";
 import { BadgesPage } from "@/features/gamification/BadgesPage";
 import { XpHistoryPage } from "@/features/gamification/XpHistoryPage";
@@ -47,6 +48,7 @@ export function AppRoutes() {
           <Route element={<RoleGuard allowedRoles={["TEACHER", "ADMIN"]} />}>
             <Route path="/courses/create" element={<CreateCoursePage />} />
             <Route path="/courses/:id/edit" element={<EditCoursePage />} />
+            <Route path="/lessons/:id/edit" element={<LessonEditPage />} />
           </Route>
 
           {/* Admin only */}

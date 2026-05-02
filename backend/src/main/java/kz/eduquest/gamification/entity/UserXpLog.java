@@ -27,11 +27,9 @@ public class UserXpLog {
     @Column(name = "action_type", nullable = false, length = 100)
     private ActionType actionType;
 
-    /** Может быть отрицательным (штраф за подсказку) */
     @Column(name = "xp_amount", nullable = false)
     private int xpAmount;
 
-    /** ID урока/задачи/квиза, за который начислен XP */
     @Column(name = "reference_id")
     private Long referenceId;
 

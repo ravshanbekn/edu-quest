@@ -62,34 +62,34 @@ export function ProfilePage() {
           className="flex items-center gap-1 px-3 py-2 text-sm border rounded-md hover:bg-muted"
         >
           <Pencil className="h-4 w-4" />
-          Редактировать
+          Edit
         </Link>
       </div>
 
       {profile?.bio && (
         <div className="rounded-lg border p-4">
-          <h2 className="text-lg font-semibold mb-2">О себе</h2>
+          <h2 className="text-lg font-semibold mb-2">About me</h2>
           <p className="text-sm text-muted-foreground">{profile.bio}</p>
         </div>
       )}
 
       {xp && (
         <div className="rounded-lg border p-4">
-          <h2 className="text-lg font-semibold mb-3">Опыт</h2>
+          <h2 className="text-lg font-semibold mb-3">XP</h2>
           <XpBar
             currentXp={xp.totalXp % xp.xpForNextLevel}
             xpForNextLevel={xp.xpForNextLevel}
             level={xp.currentLevel}
           />
           <p className="text-xs text-muted-foreground mt-2">
-            Всего: {xp.totalXp} XP
+            Total: {xp.totalXp} XP
           </p>
         </div>
       )}
 
       {badges && badges.length > 0 && (
         <div className="rounded-lg border p-4">
-          <h2 className="text-lg font-semibold mb-3">Бейджи</h2>
+          <h2 className="text-lg font-semibold mb-3">Badges</h2>
           <div className="flex flex-wrap gap-3">
             {badges.map((b) => (
               <div key={b.badgeId} className="flex flex-col items-center gap-1">

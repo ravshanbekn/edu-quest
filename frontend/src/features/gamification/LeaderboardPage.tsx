@@ -23,7 +23,7 @@ const rankRowColors: Record<number, string> = {
 };
 
 export function LeaderboardPage() {
-  usePageTitle("Лидерборд");
+  usePageTitle("Leaderboard");
   const { page, size, setPage } = usePagination(20);
   const { data: user } = useCurrentUser();
 
@@ -40,13 +40,13 @@ export function LeaderboardPage() {
     <div className="space-y-6 max-w-3xl mx-auto">
       <div className="flex items-center gap-2">
         <Trophy className="h-6 w-6 text-xp" />
-        <h1 className="text-2xl font-bold">Лидерборд</h1>
+        <h1 className="text-2xl font-bold">Leaderboard</h1>
       </div>
 
       {isLoading ? (
         <LoadingSpinner size="lg" className="py-20" />
       ) : !hasEntries ? (
-        <EmptyState title="Лидерборд пуст" description="Пока никто не набрал опыт" icon={Trophy} />
+        <EmptyState title="Leaderboard is empty" description="No one has earned XP yet" icon={Trophy} />
       ) : (
         <>
           <div className="border rounded-lg overflow-hidden">
@@ -54,8 +54,8 @@ export function LeaderboardPage() {
               <thead className="bg-muted/50">
                 <tr>
                   <th className="text-left px-4 py-3 font-medium w-16">#</th>
-                  <th className="text-left px-4 py-3 font-medium">Пользователь</th>
-                  <th className="text-right px-4 py-3 font-medium">Уровень</th>
+                  <th className="text-left px-4 py-3 font-medium">User</th>
+                  <th className="text-right px-4 py-3 font-medium">Level</th>
                   <th className="text-right px-4 py-3 font-medium">XP</th>
                 </tr>
               </thead>
@@ -86,7 +86,7 @@ export function LeaderboardPage() {
                           <span className={isMe ? "font-semibold" : ""}>
                             {entry.displayName}
                             {isMe && (
-                              <span className="text-xs text-muted-foreground ml-1">(вы)</span>
+                              <span className="text-xs text-muted-foreground ml-1">(you)</span>
                             )}
                           </span>
                         </Link>
@@ -95,7 +95,7 @@ export function LeaderboardPage() {
                         <LevelBadge level={entry.level} />
                       </td>
                       <td className={`px-4 py-3 text-right font-medium text-xp ${entry.rank <= 3 ? "text-base font-bold" : ""}`}>
-                        {entry.totalXp.toLocaleString("ru")}
+                        {entry.totalXp.toLocaleString("en")}
                       </td>
                     </tr>
                   );
@@ -107,13 +107,13 @@ export function LeaderboardPage() {
           {/* Pagination */}
           {(canGoPrev || canGoNext) && (
             <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">Страница {page + 1}</span>
+              <span className="text-muted-foreground">Page {page + 1}</span>
               <div className="flex gap-1">
                 <button
                   onClick={() => setPage(page - 1)}
                   disabled={!canGoPrev}
                   className="p-2 rounded-md hover:bg-muted disabled:opacity-30 transition-colors"
-                  aria-label="Предыдущая страница"
+                  aria-label="Previous page"
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </button>
@@ -121,7 +121,7 @@ export function LeaderboardPage() {
                   onClick={() => setPage(page + 1)}
                   disabled={!canGoNext}
                   className="p-2 rounded-md hover:bg-muted disabled:opacity-30 transition-colors"
-                  aria-label="Следующая страница"
+                  aria-label="Next page"
                 >
                   <ChevronRight className="h-4 w-4" />
                 </button>

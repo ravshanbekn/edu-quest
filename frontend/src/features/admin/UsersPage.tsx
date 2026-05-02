@@ -17,10 +17,10 @@ function RoleEditor({ user, onClose }: { user: UserResponse; onClose: () => void
     mutationFn: () => updateUserRoles(user.id, selectedRoles),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["adminUsers"] });
-      toast.success("Роли обновлены");
+      toast.success("Roles updated");
       onClose();
     },
-    onError: () => toast.error("Ошибка обновления ролей"),
+    onError: () => toast.error("Error updating roles"),
   });
 
   const toggleRole = (role: string) => {
@@ -33,7 +33,7 @@ function RoleEditor({ user, onClose }: { user: UserResponse; onClose: () => void
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="fixed inset-0 bg-black/50" onClick={onClose} />
       <div className="relative bg-background rounded-lg border shadow-lg p-6 w-full max-w-sm mx-4 space-y-4">
-        <h2 className="text-lg font-semibold">Роли: {user.email}</h2>
+        <h2 className="text-lg font-semibold">Roles: {user.email}</h2>
         <div className="space-y-2">
           {ALL_ROLES.map((role) => (
             <label key={role} className="flex items-center gap-2 text-sm cursor-pointer">
@@ -49,14 +49,14 @@ function RoleEditor({ user, onClose }: { user: UserResponse; onClose: () => void
         </div>
         <div className="flex justify-end gap-2">
           <button onClick={onClose} className="px-4 py-2 text-sm rounded-md border hover:bg-muted">
-            Отмена
+            Cancel
           </button>
           <button
             onClick={() => mutation.mutate()}
             disabled={mutation.isPending || selectedRoles.length === 0}
             className="px-4 py-2 text-sm rounded-md bg-primary text-white hover:bg-primary/90 disabled:opacity-50"
           >
-            {mutation.isPending ? "..." : "Сохранить"}
+            {mutation.isPending ? "..." : "Save"}
           </button>
         </div>
       </div>
@@ -81,7 +81,7 @@ export function UsersPage() {
     },
     {
       key: "roles",
-      header: "Роли",
+      header: "Roles",
       render: (user: UserResponse) => (
         <div className="flex gap-1">
           {user.roles.map((role) => (
@@ -94,19 +94,19 @@ export function UsersPage() {
     },
     {
       key: "active",
-      header: "Статус",
+      header: "Status",
       render: (user: UserResponse) => (
         <span className={`text-xs ${user.active ? "text-green-600" : "text-red-500"}`}>
-          {user.active ? "Активен" : "Неактивен"}
+          {user.active ? "Active" : "Inactive"}
         </span>
       ),
     },
     {
       key: "createdAt",
-      header: "Регистрация",
+      header: "Registered",
       render: (user: UserResponse) => (
         <span className="text-xs text-muted-foreground">
-          {new Date(user.createdAt).toLocaleDateString("ru-RU")}
+          {new Date(user.createdAt).toLocaleDateString("en-US")}
         </span>
       ),
     },
@@ -117,7 +117,7 @@ export function UsersPage() {
         <button
           onClick={() => setEditingUser(user)}
           className="p-1 rounded hover:bg-muted"
-          title="Изменить роли"
+          title="Edit roles"
         >
           <UserCog className="h-4 w-4 text-muted-foreground" />
         </button>
@@ -129,7 +129,7 @@ export function UsersPage() {
     <div className="space-y-6 max-w-5xl mx-auto">
       <div className="flex items-center gap-2">
         <Shield className="h-6 w-6 text-primary" />
-        <h1 className="text-2xl font-bold">Управление пользователями</h1>
+        <h1 className="text-2xl font-bold">User management</h1>
       </div>
 
       <DataTable

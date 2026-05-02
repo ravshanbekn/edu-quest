@@ -40,12 +40,12 @@ export function ContentViewer({ contents }: ContentViewerProps) {
           {content.contentType === "VIDEO" && content.videoUrl && (
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <Video className="h-3.5 w-3.5" /> Видео
+                <Video className="h-3.5 w-3.5" /> Video
               </div>
               <div className="aspect-video rounded-lg overflow-hidden bg-black">
                 <iframe
                   src={toEmbedUrl(content.videoUrl)}
-                  title="Видео урока"
+                  title="Lesson video"
                   className="h-full w-full"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -57,7 +57,7 @@ export function ContentViewer({ contents }: ContentViewerProps) {
           {content.contentType === "CODE_BLOCK" && content.body && (
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <Code className="h-3.5 w-3.5" /> Код
+                <Code className="h-3.5 w-3.5" /> Code
               </div>
               <pre className="bg-muted rounded-lg p-4 overflow-x-auto text-sm">
                 <code>{content.body}</code>
@@ -68,12 +68,21 @@ export function ContentViewer({ contents }: ContentViewerProps) {
           {content.contentType === "IMAGE" && content.videoUrl && (
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <Image className="h-3.5 w-3.5" /> Изображение
+                <Image className="h-3.5 w-3.5" /> Image
               </div>
               <img
                 src={content.videoUrl}
                 alt={content.body ?? ""}
                 className="rounded-lg max-w-full"
+                referrerPolicy="no-referrer"
+                onError={(e) => {
+                  const el = e.currentTarget;
+                  el.style.display = "none";
+                  const msg = document.createElement("p");
+                  msg.className = "text-sm text-muted-foreground italic";
+                  msg.textContent = "Image unavailable";
+                  el.parentNode?.appendChild(msg);
+                }}
               />
             </div>
           )}

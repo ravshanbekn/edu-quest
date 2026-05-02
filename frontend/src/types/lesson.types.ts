@@ -40,3 +40,10 @@ export interface UpdateLessonRequest {
   type?: LessonType;
   xpReward?: number;
 }
+
+export interface ContentRequest {
+  contentType: ContentType;
+  body: string | null;
+  videoUrl: string | null;
+  sortOrder: number;
+}

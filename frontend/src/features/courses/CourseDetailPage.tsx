@@ -28,32 +28,32 @@ export function CourseDetailPage() {
     mutationFn: () => deleteCourse(id!),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["courses"] });
-      toast.success("Курс удалён");
+      toast.success("Course deleted");
       navigate("/courses");
     },
-    onError: () => toast.error("Ошибка удаления курса"),
+    onError: () => toast.error("Error deleting course"),
   });
 
   const publishM = useMutation({
     mutationFn: () => publishCourse(id!),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["course", id] });
-      toast.success("Курс опубликован");
+      toast.success("Course published");
     },
-    onError: () => toast.error("Ошибка публикации"),
+    onError: () => toast.error("Error publishing"),
   });
 
   const enrollM = useMutation({
     mutationFn: () => enrollInCourse(id!),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["myEnrollments"] });
-      toast.success("Вы записались на курс");
+      toast.success("You have enrolled in the course");
     },
-    onError: () => toast.error("Ошибка записи на курс"),
+    onError: () => toast.error("Error enrolling in course"),
   });
 
   if (isLoading) return <LoadingSpinner size="lg" className="py-20" />;
-  if (!course) return <p className="text-muted-foreground py-10 text-center">Курс не найден</p>;
+  if (!course) return <p className="text-muted-foreground py-10 text-center">Course not found</p>;
 
   const isOwner = user?.id === course.teacherId;
   const isAdmin = user?.roles.includes("ADMIN");
@@ -82,9 +82,9 @@ export function CourseDetailPage() {
             )}
             <div className="flex items-center gap-3 text-xs text-muted-foreground">
               {!course.published && (
-                <span className="bg-muted px-2 py-0.5 rounded">Черновик</span>
+                <span className="bg-muted px-2 py-0.5 rounded">Draft</span>
               )}
-              <span>{new Date(course.createdAt).toLocaleDateString("ru-RU")}</span>
+              <span>{new Date(course.createdAt).toLocaleDateString("en-US")}</span>
             </div>
           </div>
 
@@ -95,7 +95,7 @@ export function CourseDetailPage() {
                 disabled={enrollM.isPending}
                 className="px-4 py-2 text-sm rounded-md bg-primary text-white hover:bg-primary/90 disabled:opacity-50"
               >
-                {enrollM.isPending ? "..." : "Записаться"}
+                {enrollM.isPending ? "..." : "Enroll"}
               </button>
             )}
             {canEdit && !course.published && (
@@ -104,7 +104,7 @@ export function CourseDetailPage() {
                 disabled={publishM.isPending}
                 className="flex items-center gap-1 px-3 py-2 text-sm rounded-md border hover:bg-muted"
               >
-                <Globe className="h-4 w-4" /> Опубликовать
+                <Globe className="h-4 w-4" /> Publish
               </button>
             )}
             {canEdit && (
@@ -113,7 +113,7 @@ export function CourseDetailPage() {
                   to={`/courses/${course.id}/edit`}
                   className="flex items-center gap-1 px-3 py-2 text-sm rounded-md border hover:bg-muted"
                 >
-                  <Pencil className="h-4 w-4" /> Редактировать
+                  <Pencil className="h-4 w-4" /> Edit
                 </Link>
                 <button
                   onClick={() => setShowDelete(true)}
@@ -129,7 +129,7 @@ export function CourseDetailPage() {
 
       {/* Blocks & Lessons */}
       <div className="space-y-3">
-        <h2 className="text-lg font-semibold">Содержание курса</h2>
+        <h2 className="text-lg font-semibold">Course content</h2>
         {course.blocks && course.blocks.length > 0 ? (
           <BlockList courseId={course.id} blocks={course.blocks} canEdit={!!canEdit} />
         ) : (
@@ -137,7 +137,7 @@ export function CourseDetailPage() {
             {canEdit ? (
               <BlockList courseId={course.id} blocks={[]} canEdit={true} />
             ) : (
-              "Содержание пока не добавлено"
+              "No content added yet"
             )}
           </div>
         )}
@@ -147,9 +147,9 @@ export function CourseDetailPage() {
         open={showDelete}
         onClose={() => setShowDelete(false)}
         onConfirm={() => deleteM.mutate()}
-        title="Удалить курс?"
-        description="Все блоки и уроки курса будут удалены. Это действие нельзя отменить."
-        confirmLabel="Удалить курс"
+        title="Delete course?"
+        description="All blocks and lessons of the course will be deleted. This action cannot be undone."
+        confirmLabel="Delete course"
         destructive
         loading={deleteM.isPending}
       />

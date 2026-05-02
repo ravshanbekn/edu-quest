@@ -3,7 +3,7 @@ import { useThemeStore } from "@/stores/theme.store";
 import { cn } from "@/lib/utils";
 
 interface ThemeToggleProps {
-  /** В свёрнутом sidebar показываем только иконку */
+  /** In collapsed sidebar show only the icon */
   collapsed?: boolean;
   className?: string;
 }
@@ -15,8 +15,8 @@ export function ThemeToggle({ collapsed = false, className }: ThemeToggleProps) 
   return (
     <button
       onClick={toggle}
-      title={isDark ? "Переключить на светлую тему" : "Переключить на тёмную тему"}
-      aria-label={isDark ? "Светлая тема" : "Тёмная тема"}
+      title={isDark ? "Switch to light theme" : "Switch to dark theme"}
+      aria-label={isDark ? "Light theme" : "Dark theme"}
       className={cn(
         "flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors w-full",
         "text-sidebar-foreground hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground",
@@ -40,7 +40,7 @@ export function ThemeToggle({ collapsed = false, className }: ThemeToggleProps) 
         )}
       </span>
       {!collapsed && (
-        <span>{isDark ? "Светлая тема" : "Тёмная тема"}</span>
+        <span>{isDark ? "Light theme" : "Dark theme"}</span>
       )}
     </button>
   );

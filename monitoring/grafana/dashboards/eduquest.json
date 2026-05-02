@@ -1,0 +1,235 @@
+{
+  "title": "EduQuest Backend",
+  "uid": "eduquest-backend",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "time": { "from": "now-1h", "to": "now" },
+  "panels": [
+    {
+      "id": 1,
+      "type": "row",
+      "title": "HTTP Traffic",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+      "collapsed": false
+    },
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "Requests / sec",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 4, "w": 5, "x": 0, "y": 1 },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "orientation": "auto", "colorMode": "background" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "decimals": 2,
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] }
+        }
+      },
+      "targets": [{
+        "datasource": { "type": "prometheus", "uid": "prometheus" },
+        "expr": "sum(rate(http_server_requests_seconds_count{application=\"edu-quest-backend\"}[1m]))",
+        "refId": "A", "legendFormat": "RPS"
+      }]
+    },
+    {
+      "id": 3,
+      "type": "stat",
+      "title": "5xx Errors / sec",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 4, "w": 5, "x": 5, "y": 1 },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "decimals": 2,
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "red", "value": 0.01 }] }
+        }
+      },
+      "targets": [{
+        "datasource": { "type": "prometheus", "uid": "prometheus" },
+        "expr": "sum(rate(http_server_requests_seconds_count{application=\"edu-quest-backend\",outcome=\"SERVER_ERROR\"}[1m]))",
+        "refId": "A", "legendFormat": "5xx"
+      }]
+    },
+    {
+      "id": 4,
+      "type": "stat",
+      "title": "P99 Latency",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 4, "w": 5, "x": 10, "y": 1 },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "decimals": 3,
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 0.5 }, { "color": "red", "value": 1 }] }
+        }
+      },
+      "targets": [{
+        "datasource": { "type": "prometheus", "uid": "prometheus" },
+        "expr": "histogram_quantile(0.99, sum(rate(http_server_requests_seconds_bucket{application=\"edu-quest-backend\"}[5m])) by (le))",
+        "refId": "A", "legendFormat": "p99"
+      }]
+    },
+    {
+      "id": 5,
+      "type": "stat",
+      "title": "P50 Latency",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 4, "w": 5, "x": 15, "y": 1 },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "decimals": 3,
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 0.2 }, { "color": "red", "value": 0.5 }] }
+        }
+      },
+      "targets": [{
+        "datasource": { "type": "prometheus", "uid": "prometheus" },
+        "expr": "histogram_quantile(0.50, sum(rate(http_server_requests_seconds_bucket{application=\"edu-quest-backend\"}[5m])) by (le))",
+        "refId": "A", "legendFormat": "p50"
+      }]
+    },
+    {
+      "id": 6,
+      "type": "timeseries",
+      "title": "HTTP Request Rate by Endpoint",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 5 },
+      "options": { "tooltip": { "mode": "multi" }, "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["mean", "max"] } },
+      "fieldConfig": { "defaults": { "unit": "reqps", "custom": { "lineWidth": 2 } } },
+      "targets": [{
+        "datasource": { "type": "prometheus", "uid": "prometheus" },
+        "expr": "sum by (uri, method) (rate(http_server_requests_seconds_count{application=\"edu-quest-backend\"}[1m]))",
+        "refId": "A", "legendFormat": "{{method}} {{uri}}"
+      }]
+    },
+    {
+      "id": 7,
+      "type": "timeseries",
+      "title": "HTTP Errors (4xx / 5xx)",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 5 },
+      "options": { "tooltip": { "mode": "multi" }, "legend": { "displayMode": "list", "placement": "bottom" } },
+      "fieldConfig": { "defaults": { "unit": "reqps", "custom": { "lineWidth": 2 }, "color": { "mode": "palette-classic" } } },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "sum(rate(http_server_requests_seconds_count{application=\"edu-quest-backend\",outcome=\"CLIENT_ERROR\"}[1m]))",
+          "refId": "A", "legendFormat": "4xx Client Errors"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "sum(rate(http_server_requests_seconds_count{application=\"edu-quest-backend\",outcome=\"SERVER_ERROR\"}[1m]))",
+          "refId": "B", "legendFormat": "5xx Server Errors"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "type": "row",
+      "title": "JVM & System",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 13 },
+      "collapsed": false
+    },
+    {
+      "id": 9,
+      "type": "timeseries",
+      "title": "JVM Heap Memory",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 14 },
+      "options": { "tooltip": { "mode": "multi" }, "legend": { "displayMode": "list", "placement": "bottom" } },
+      "fieldConfig": { "defaults": { "unit": "bytes", "custom": { "lineWidth": 2, "fillOpacity": 10 } } },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "sum(jvm_memory_used_bytes{application=\"edu-quest-backend\",area=\"heap\"})",
+          "refId": "A", "legendFormat": "Used"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "sum(jvm_memory_max_bytes{application=\"edu-quest-backend\",area=\"heap\"})",
+          "refId": "B", "legendFormat": "Max"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "type": "timeseries",
+      "title": "CPU Usage",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 14 },
+      "options": { "tooltip": { "mode": "multi" }, "legend": { "displayMode": "list", "placement": "bottom" } },
+      "fieldConfig": { "defaults": { "unit": "percentunit", "max": 1, "custom": { "lineWidth": 2, "fillOpacity": 10 } } },
+      "targets": [{
+        "datasource": { "type": "prometheus", "uid": "prometheus" },
+        "expr": "process_cpu_usage{application=\"edu-quest-backend\"}",
+        "refId": "A", "legendFormat": "Process CPU"
+      }]
+    },
+    {
+      "id": 11,
+      "type": "timeseries",
+      "title": "GC Pause Duration",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 14 },
+      "options": { "tooltip": { "mode": "multi" }, "legend": { "displayMode": "list", "placement": "bottom" } },
+      "fieldConfig": { "defaults": { "unit": "s", "custom": { "lineWidth": 2 } } },
+      "targets": [{
+        "datasource": { "type": "prometheus", "uid": "prometheus" },
+        "expr": "rate(jvm_gc_pause_seconds_sum{application=\"edu-quest-backend\"}[1m])",
+        "refId": "A", "legendFormat": "{{action}} {{cause}}"
+      }]
+    },
+    {
+      "id": 12,
+      "type": "row",
+      "title": "Database",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 22 },
+      "collapsed": false
+    },
+    {
+      "id": 13,
+      "type": "timeseries",
+      "title": "HikariCP Connections",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 23 },
+      "options": { "tooltip": { "mode": "multi" }, "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["mean", "max"] } },
+      "fieldConfig": { "defaults": { "unit": "short", "custom": { "lineWidth": 2 } } },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "hikaricp_connections_active{application=\"edu-quest-backend\"}",
+          "refId": "A", "legendFormat": "Active"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "hikaricp_connections_idle{application=\"edu-quest-backend\"}",
+          "refId": "B", "legendFormat": "Idle"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "hikaricp_connections_pending{application=\"edu-quest-backend\"}",
+          "refId": "C", "legendFormat": "Pending"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "type": "timeseries",
+      "title": "HikariCP Acquire Time",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 23 },
+      "options": { "tooltip": { "mode": "multi" }, "legend": { "displayMode": "list", "placement": "bottom" } },
+      "fieldConfig": { "defaults": { "unit": "s", "custom": { "lineWidth": 2 } } },
+      "targets": [{
+        "datasource": { "type": "prometheus", "uid": "prometheus" },
+        "expr": "rate(hikaricp_connections_acquire_seconds_sum{application=\"edu-quest-backend\"}[1m]) / rate(hikaricp_connections_acquire_seconds_count{application=\"edu-quest-backend\"}[1m])",
+        "refId": "A", "legendFormat": "Avg Acquire Time"
+      }]
+    }
+  ]
+}

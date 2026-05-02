@@ -31,13 +31,6 @@ public class UserService {
         return toUserResponse(findUserOrThrow(userId));
     }
 
-    /**
-     * Возвращает профиль с учётом видимости (см. архитектурный документ §8).
-     *
-     * @param targetUserId     ID пользователя, чей профиль запрашивается
-     * @param requestingUserId ID того, кто делает запрос (null — гость)
-     * @param isAdmin          признак роли ADMIN у запрашивающего
-     */
     public ProfileResponse getProfile(Long targetUserId, Long requestingUserId, boolean isAdmin) {
         UserProfile profile = profileRepository.findByUserId(targetUserId)
                 .orElseThrow(() -> new IllegalArgumentException("Profile not found for user: " + targetUserId));
@@ -69,8 +62,6 @@ public class UserService {
     public Page<UserResponse> getAllUsers(Pageable pageable) {
         return userRepository.findAllActive(pageable).map(this::toUserResponse);
     }
-
-    // uploadAvatar временно отключён (MinIO не настроен)
 
     @Transactional
     public UserResponse assignRoles(Long userId, Set<String> roleNames) {

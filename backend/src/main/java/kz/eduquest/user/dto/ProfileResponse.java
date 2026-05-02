@@ -9,7 +9,6 @@ public record ProfileResponse(
         String bio,
         boolean isPublic
 ) {
-    /** Владелец профиля или ADMIN — полные данные */
     public static ProfileResponse full(UserProfile p) {
         return new ProfileResponse(
                 p.getUser().getId(),
@@ -20,7 +19,7 @@ public record ProfileResponse(
         );
     }
 
-    /** Публичный профиль — все поля, кроме скрытых */
+    /** Public profile — all fields except hidden ones */
     public static ProfileResponse publicView(UserProfile p) {
         return new ProfileResponse(
                 p.getUser().getId(),
@@ -31,7 +30,7 @@ public record ProfileResponse(
         );
     }
 
-    /** Закрытый профиль — только имя и аватар */
+    /** Restricted profile — name and avatar only */
     public static ProfileResponse restricted(UserProfile p) {
         return new ProfileResponse(
                 p.getUser().getId(),

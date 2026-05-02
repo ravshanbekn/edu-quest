@@ -20,7 +20,7 @@ export function PublicProfilePage() {
   });
 
   if (isLoading) return <LoadingSpinner className="py-20" />;
-  if (!profile) return <p className="text-muted-foreground">Профиль не найден</p>;
+  if (!profile) return <p className="text-muted-foreground">Profile not found</p>;
 
   return (
     <div className="space-y-6">
@@ -32,21 +32,21 @@ export function PublicProfilePage() {
         />
         <div>
           <h1 className="text-2xl font-bold">
-            {profile.displayName || "Пользователь"}
+            {profile.displayName || "User"}
           </h1>
         </div>
       </div>
 
       {profile.bio && (
         <div className="rounded-lg border p-4">
-          <h2 className="text-lg font-semibold mb-2">О себе</h2>
+          <h2 className="text-lg font-semibold mb-2">About</h2>
           <p className="text-sm text-muted-foreground">{profile.bio}</p>
         </div>
       )}
 
       {badges && badges.length > 0 && (
         <div className="rounded-lg border p-4">
-          <h2 className="text-lg font-semibold mb-3">Бейджи</h2>
+          <h2 className="text-lg font-semibold mb-3">Badges</h2>
           <div className="flex flex-wrap gap-3">
             {badges.map((b) => (
               <div key={b.badgeId} className="flex flex-col items-center gap-1">

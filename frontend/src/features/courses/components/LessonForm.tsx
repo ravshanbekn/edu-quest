@@ -10,12 +10,12 @@ interface LessonFormProps {
 }
 
 const LESSON_TYPES: { value: LessonType; label: string }[] = [
-  { value: "VIDEO", label: "Видео" },
-  { value: "TASK", label: "Задание" },
-  { value: "QUIZ", label: "Квиз" },
-  { value: "MIXED", label: "Смешанный" },
-  { value: "THEORY", label: "Теория" },
-  { value: "PRACTICE", label: "Практика" },
+  { value: "VIDEO", label: "Video" },
+  { value: "TASK", label: "Task" },
+  { value: "QUIZ", label: "Quiz" },
+  { value: "MIXED", label: "Mixed" },
+  { value: "THEORY", label: "Theory" },
+  { value: "PRACTICE", label: "Practice" },
 ];
 
 export function LessonForm({ initialTitle = "", initialType = "MIXED", onSubmit, onCancel, loading }: LessonFormProps) {
@@ -27,7 +27,7 @@ export function LessonForm({ initialTitle = "", initialType = "MIXED", onSubmit,
       <input
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        placeholder="Название урока"
+        placeholder="Lesson title"
         className="flex-1 rounded-md border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
         autoFocus
       />
@@ -45,13 +45,13 @@ export function LessonForm({ initialTitle = "", initialType = "MIXED", onSubmit,
         disabled={!title.trim() || loading}
         className="px-3 py-2 text-sm rounded-md bg-primary text-white hover:bg-primary/90 disabled:opacity-50"
       >
-        {loading ? "..." : "Сохранить"}
+        {loading ? "..." : "Save"}
       </button>
       <button
         onClick={onCancel}
         className="px-3 py-2 text-sm rounded-md border hover:bg-muted"
       >
-        Отмена
+        Cancel
       </button>
     </div>
   );

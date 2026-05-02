@@ -26,8 +26,8 @@ server:
 
   servlet:
     multipart:
-      max-file-size: 5MB
-      max-request-size: 5MB
+      max-file-size: 200MB
+      max-request-size: 200MB
 
 springdoc:
   swagger-ui:
@@ -37,13 +37,38 @@ springdoc:
   api-docs:
     path: /v3/api-docs
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  endpoint:
+    health:
+      show-details: when-authorized
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+      maximum-expected-value:
+        http.server.requests: 10s
+      minimum-expected-value:
+        http.server.requests: 1ms
+
+logging:
+  logstash:
+    host: ${LOGSTASH_HOST:localhost}
+    port: ${LOGSTASH_PORT:5000}
+
 app:
   jwt:
     secret: ${JWT_SECRET:eduquest-dev-secret-key-min-256-bits-long-enough-here}
     access-expiration-ms: 900000       # 15 минут
     refresh-expiration-ms: 604800000   # 7 дней
   minio:
-    url: ${MINIO_URL:}
+    url: ${MINIO_URL:http://localhost:9000}
     access-key: ${MINIO_ACCESS_KEY:minioadmin}
     secret-key: ${MINIO_SECRET_KEY:minioadmin}
     bucket: ${MINIO_BUCKET:eduquest}
+    public-url: ${MINIO_PUBLIC_URL:http://localhost:9000}

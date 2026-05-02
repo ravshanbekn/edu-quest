@@ -9,10 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-/**
- * Управление XP и уровнями.
- * Формула из §6.2: для перехода на уровень N нужно N² × 100 XP от предыдущего уровня.
- */
 @Service
 @RequiredArgsConstructor
 public class UserLevelService {
@@ -25,9 +21,8 @@ public class UserLevelService {
         UserLevel level = levelRepository.findByUserId(userId)
                 .orElseGet(() -> createInitialLevel(userId));
 
-        level.setTotalXp(level.getTotalXp() + xpAmount);
+        level.setTotalXp(Math.max(0, level.getTotalXp() + xpAmount));
 
-        // Пересчитать уровень
         int newLevel = calculateLevel(level.getTotalXp());
         level.setCurrentLevel(newLevel);
 
@@ -39,11 +34,6 @@ public class UserLevelService {
                 .orElseGet(() -> createInitialLevel(userId));
     }
 
-    /**
-     * Вычисляет уровень по общему XP.
-     * Общий XP для уровня N = сумма (i² × 100) для i от 1 до N-1.
-     * Уровень 1: 0 XP, уровень 2: 100 XP, уровень 3: 500 XP, и т.д.
-     */
     int calculateLevel(int totalXp) {
         int level = 1;
         int cumulativeXp = 0;

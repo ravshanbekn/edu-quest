@@ -23,7 +23,7 @@ function QuizItem({ quiz }: { quiz: QuizBriefResponse }) {
       setQuestions(data.questions);
       if (data.timeLimit) setTimeLeft(data.timeLimit);
     },
-    onError: () => toast.error("Ошибка начала квиза"),
+    onError: () => toast.error("Error starting quiz"),
   });
 
   const submitMutation = useMutation({
@@ -31,10 +31,10 @@ function QuizItem({ quiz }: { quiz: QuizBriefResponse }) {
     onSuccess: (data) => {
       setResult(data);
       setTimeLeft(null);
-      if (data.passed) toast.success(`Квиз пройден! +${data.xpAwarded} XP`);
-      else toast.error("Квиз не пройден");
+      if (data.passed) toast.success(`Quiz passed! +${data.xpAwarded} XP`);
+      else toast.error("Quiz failed");
     },
-    onError: () => toast.error("Ошибка отправки квиза"),
+    onError: () => toast.error("Error submitting quiz"),
   });
 
   const handleSubmit = useCallback(() => {
@@ -81,14 +81,14 @@ function QuizItem({ quiz }: { quiz: QuizBriefResponse }) {
     return (
       <div className="border rounded-lg p-4 space-y-3">
         <div className="flex items-center justify-between">
-          <h3 className="font-semibold text-sm">{quiz.title || "Квиз"}</h3>
+          <h3 className="font-semibold text-sm">{quiz.title || "Quiz"}</h3>
           <span className="text-xs text-amber-600">{quiz.xpReward} XP</span>
         </div>
         <div className="flex items-center gap-4 text-xs text-muted-foreground">
-          <span>{quiz.questionCount} вопросов</span>
+          <span>{quiz.questionCount} questions</span>
           {quiz.timeLimit && (
             <span className="flex items-center gap-1">
-              <Clock className="h-3.5 w-3.5" /> {Math.floor(quiz.timeLimit / 60)} мин
+              <Clock className="h-3.5 w-3.5" /> {Math.floor(quiz.timeLimit / 60)} min
             </span>
           )}
         </div>
@@ -97,7 +97,7 @@ function QuizItem({ quiz }: { quiz: QuizBriefResponse }) {
           disabled={startMutation.isPending}
           className="px-4 py-2 text-sm rounded-md bg-primary text-white hover:bg-primary/90 disabled:opacity-50"
         >
-          {startMutation.isPending ? "Загрузка..." : "Начать квиз"}
+          {startMutation.isPending ? "Loading..." : "Start quiz"}
         </button>
       </div>
     );
@@ -107,14 +107,14 @@ function QuizItem({ quiz }: { quiz: QuizBriefResponse }) {
   if (result) {
     return (
       <div className="border rounded-lg p-4 space-y-3">
-        <h3 className="font-semibold text-sm">{quiz.title || "Квиз"}</h3>
+        <h3 className="font-semibold text-sm">{quiz.title || "Quiz"}</h3>
         <div className={`flex items-center gap-2 p-3 rounded-md ${
           result.passed ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"
         }`}>
           {result.passed ? <CheckCircle className="h-5 w-5" /> : <XCircle className="h-5 w-5" />}
           <div>
-            <p className="font-medium">{result.passed ? "Квиз пройден!" : "Квиз не пройден"}</p>
-            <p className="text-sm">Результат: {result.score}% · {result.xpAwarded > 0 ? `+${result.xpAwarded} XP` : "0 XP"}</p>
+            <p className="font-medium">{result.passed ? "Quiz passed!" : "Quiz failed"}</p>
+            <p className="text-sm">Score: {result.score}% · {result.xpAwarded > 0 ? `+${result.xpAwarded} XP` : "0 XP"}</p>
           </div>
         </div>
       </div>
@@ -125,7 +125,7 @@ function QuizItem({ quiz }: { quiz: QuizBriefResponse }) {
   return (
     <div className="border rounded-lg p-4 space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="font-semibold text-sm">{quiz.title || "Квиз"}</h3>
+        <h3 className="font-semibold text-sm">{quiz.title || "Quiz"}</h3>
         {timeLeft !== null && (
           <span className={`flex items-center gap-1 text-sm font-mono ${timeLeft < 30 ? "text-destructive" : "text-muted-foreground"}`}>
             <Clock className="h-4 w-4" /> {formatTime(timeLeft)}
@@ -167,7 +167,7 @@ function QuizItem({ quiz }: { quiz: QuizBriefResponse }) {
         disabled={submitMutation.isPending}
         className="px-4 py-2 text-sm rounded-md bg-primary text-white hover:bg-primary/90 disabled:opacity-50"
       >
-        {submitMutation.isPending ? "Отправка..." : "Завершить квиз"}
+        {submitMutation.isPending ? "Submitting..." : "Finish quiz"}
       </button>
     </div>
   );
@@ -178,7 +178,7 @@ export function QuizSection({ quizzes }: QuizSectionProps) {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-semibold">Квизы</h2>
+      <h2 className="text-lg font-semibold">Quizzes</h2>
       {quizzes.map((quiz) => (
         <QuizItem key={quiz.id} quiz={quiz} />
       ))}

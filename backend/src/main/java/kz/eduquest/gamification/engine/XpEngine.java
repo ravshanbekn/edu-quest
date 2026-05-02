@@ -13,10 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 
-/**
- * XP Engine — слушает события прогресса и начисляет XP (§6.1, §6.4).
- * Idempotent: одно действие = одно начисление (§9.5).
- */
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -56,8 +52,7 @@ public class XpEngine {
     @EventListener
     @Transactional
     public void onHintUsed(HintUsedEvent event) {
-        // Штраф только при первом открытии подсказки
-        awardXpOnce(event.userId(), ActionType.HINT_USED, event.hintId(), XP_HINT_PENALTY);
+        awardXpOnce(event.userId(), ActionType.HINT_USED, event.hintId(), -event.xpPenalty());
     }
 
     @EventListener
@@ -72,9 +67,6 @@ public class XpEngine {
         awardXpOnce(event.userId(), ActionType.COURSE_COMPLETE, event.courseId(), XP_COURSE_COMPLETE);
     }
 
-    /**
-     * Начисляет XP только один раз за (userId, actionType, referenceId).
-     */
     private void awardXpOnce(Long userId, ActionType actionType, Long referenceId, int xpAmount) {
         if (xpLogRepository.existsByUserIdAndActionTypeAndReferenceId(userId, actionType, referenceId)) {
             log.debug("XP already awarded: userId={}, action={}, ref={}", userId, actionType, referenceId);
