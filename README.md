@@ -49,3 +49,7 @@ That's it. All services start automatically with health checks.
 docker compose down          # stop containers
 docker compose down -v       # stop and remove all volumes (deletes data)
 ```
+
+## Worked on:
+- 230103046
+- 230103054
